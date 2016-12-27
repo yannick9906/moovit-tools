@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Yannick Félix" />
+    <title>Moovit Timetable Converter</title>
+    <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.css"  media="screen,projection"/>
+
+    <link rel="stylesheet" href="lib/mdi/css/materialdesignicons.min.css" media="all" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" media="all" type="text/css" />
+</head>
+<body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="lib/materialize/js/materialize.min.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="input-field col s6">
+            <textarea id="inputField" class="materialize-textarea"></textarea>
+            <label for="inputField">Eingabe</label>
+        </div>
+        <div class="input-field col s6">
+            <textarea id="outputField" class="materialize-textarea"></textarea>
+            <label for="outputField">Ausgabe</label>
+        </div>
+        <button id="btnSubmitEditFila" class="btn orange waves-effect waves-light col s3" onclick="convert()" type="button">
+            <i class="mddi mddi-swap-horizontal"></i> Intervalle berechnen
+        </button>
+        <button id="btnSubmit" class="btn orange waves-effect waves-light col s3" onclick="showTimes()" type="button">
+            <i class="mddi mddi-swap-horizontal"></i> Intervallzeiten anzeigen
+        </button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function() {
+        $("select").material_select();
+    });
+
+    function convert() {
+        times = [];
+        intervals = [];
+        string = $("#inputField").val();
+        array = string.split("\n");
+        array.forEach(function(elem, i, a) {
+            subarray = elem.split(" ");
+            subarray.forEach(function(ielem, j, sa) {
+                try {
+                    times[j][i] = ielem;
+                } catch(e) {
+                    times[j] = [];
+                    times[j][i] = ielem;
+                }
+            });
+        });
+
+        times.forEach(function(trip, i, a) {
+            intervals[i] = createIntervalString(trip);
+        });
+
+        var uniqueIntervals = intervals.filter(function(item, pos) {
+            return intervals.indexOf(item) == pos;
+        });
+
+        var output = "";
+        uniqueIntervals.forEach(function(elem, i, a) {
+            output += elem + "\n";
+        });
+
+        $("#outputField").val(output);
+        Materialize.updateTextFields();
+    }
+
+    function showTimes() {
+        times = [];
+        intervals = [];
+        string = $("#inputField").val();
+        array = string.split("\n");
+        array.forEach(function(elem, i, a) {
+            subarray = elem.split(" ");
+            subarray.forEach(function(ielem, j, sa) {
+                try {
+                    times[j][i] = ielem;
+                } catch(e) {
+                    times[j] = [];
+                    times[j][i] = ielem;
+                }
+            });
+        });
+
+        times.forEach(function(trip, i, a) {
+            intervals[i] = createIntervalString(trip);
+        });
+
+        var uniqueIntervals = intervals.filter(function(item, pos) {
+            return intervals.indexOf(item) == pos;
+        });
+
+        output = "";
+
+        uniqueIntervals.forEach(function(interval, i, a) {
+            output += i+"("+getIntervalTime(interval)+"m): ";
+            times.forEach(function(trip, j, sa) {
+                if(intervals[j] == interval) {
+                    output += trip[0] + "; ";
+                }
+            });
+            output += "\n";
+        });
+
+        $("#outputField").val(output);
+        Materialize.updateTextFields();
+    }
+
+    function getIntervalTime(string) {
+        var times = string.split(", ");
+        var time = 0;
+        times.forEach(function(e, i, a) {
+            if(parseInt(e) <= 200)
+                time += parseInt(e);
+        });
+        return time;
+    }
+
+    function createIntervalString(timeArray) {
+        var string = "";
+        var preTime = 0;
+        timeArray.forEach(function(elem, i, a) {
+            if(preTime != 0) {
+                hrsmin = elem.split(".");
+                thistime = parseInt(hrsmin[0])*60 + parseInt(hrsmin[1]);
+                interval = thistime-preTime;
+                preTime = thistime;
+                string += interval + ", "
+            } else {
+                hrsmin = elem.split(".");
+                thistime = parseInt(hrsmin[0])*60 + parseInt(hrsmin[1]);
+                preTime = thistime;
+            }
+        });
+        return string;
+    }
+
+</script>
+</body>
+</html>

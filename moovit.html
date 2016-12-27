@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Yannick Félix" />
+    <title>Moovit Timetable Converter</title>
+    <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.css"  media="screen,projection"/>
+
+    <link rel="stylesheet" href="lib/mdi/css/materialdesignicons.min.css" media="all" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" media="all" type="text/css" />
+</head>
+<body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="lib/materialize/js/materialize.min.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="input-field col s6">
+            <textarea id="inputField" class="materialize-textarea"></textarea>
+            <label for="inputField">Eingabe</label>
+        </div>
+        <div class="input-field col s6">
+            <textarea id="outputField" class="materialize-textarea"></textarea>
+            <label for="outputField">Ausgabe</label>
+        </div>
+        <div class="input-field col s3">
+            <select class="icons" id="hours">
+                <option value=".">.</option>
+                <option value=":">:</option>
+                <option value="-">-</option>
+            </select>
+            <label for="hours">Stundenseperator</label>
+        </div>
+        <div class="input-field col s3">
+            <select class="icons" id="seperator">
+                <option value=" ">Leerzeichen</option>
+                <option value=":">:</option>
+                <option value=",">,</option>
+                <option value=";">;</option>
+            </select>
+            <label for="seperator">Zeitenseperator</label>
+        </div>
+        <button id="btnSubmitEditFila" class="btn orange waves-effect waves-light col s3" onclick="convert()" type="button">
+            <i class="mddi mddi-swap-horizontal"></i> Normal
+        </button>
+        <button id="btnSubmitEditFila" class="btn orange waves-effect waves-light col s3" onclick="convertWien()" type="button">
+            <i class="mddi mddi-auto-fix"></i> Aushang
+        </button>
+        <div class="input-field col s6">
+            <input id="onlyThis" type="text">
+            <label for="onlyThis">Nur Zeiten mit Bezeichnung [Nur bei Aushängen]</label>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function() {
+        $("select").material_select();
+    });
+
+    function convert() {
+        string = $("#inputField").val();
+
+        string = string.split($("#hours").val()).join(":");
+        string = string.split($("#seperator").val()).join(";");
+
+        outputField = $("#outputField");
+        outputField.val(string);
+        Materialize.updateTextFields();
+        outputField.select();
+    }
+
+    function convertWien() {
+        string = $("#inputField").val();
+        onlyThis = $("#onlyThis").val();
+        useOnlyThis = onlyThis != "";
+        array = string.split("\n");
+        finishString = "";
+        var finishArray = [];
+        array.forEach(function(element, index, array) {
+            thisArray = element.split(" ");
+            hour = thisArray[0];
+            thisArray.shift();
+            thisArray.forEach(function(element, index, array) {
+                if(useOnlyThis) {
+                    if(element.replace(/[0-9]/g, '') == onlyThis) {
+                        if(!(element == "" || element.match(/\d+/) == null))
+                            finishArray.push(hour+":"+element.match(/\d+/)[0]);
+                    }
+                } else {
+                    if(!(element == "" || element.match(/\d+/) == null))
+                        finishArray.push(hour+":"+element.match(/\d+/)[0]);
+                }
+
+            });
+        });
+        finishString = finishArray.join(";");
+        outputField = $("#outputField");
+        outputField.val(finishString);
+        Materialize.updateTextFields();
+        outputField.trigger('autoresize');
+        outputField.select();
+    }
+</script>
+</body>
+</html>
