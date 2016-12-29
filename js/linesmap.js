@@ -540,10 +540,11 @@ function submitEditTrip() {
 }
 
 function downloadAsKML() {
-    let tosave = "lat,lng\n";
+    let tosave = "<?xml version='1.0' encoding='UTF-8'?><kml xmlns='http://www.opengis.net/kml/2.2'><Document><Placemark><name>Linie "+currentLine+": "+currentTrip+"</name><description><![CDATA[Moovittool Export &copy;2016-17 Yannick F&#233;lix]]></description><LineString><coordinates>\n";
     currentTripLatLngs.forEach(function(e) {
-        tosave += e[0]+","+e[1]+"\n";
+        tosave += e[1]+","+e[0]+"\n";
     });
+    tosave += "</coordinates> </LineString> </Placemark></Document></kml>";
     var blob = new Blob([tosave], {type: "application/vnd.google-earth.kml+xml;charset=utf-8"});
     saveAs(blob, "line"+currentLine+"-"+currentTrip+".kml");
 }
