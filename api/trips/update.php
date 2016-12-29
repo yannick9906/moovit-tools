@@ -13,6 +13,7 @@
     require_once '../../classes/Util.php';
     require_once '../../classes/Project.php';
     require_once '../../classes/Line.php';
+    require_once '../../classes/TripType.php';
 
     $user = \moovit\Util::checkSession();
 
@@ -21,10 +22,10 @@
     $tripDirection = $_POST["direction"];
     $path = json_decode($_POST["path"]);
 
-    if($tripDirection != "" && $tripName != "" && $path != "") {
-        $trip->setTripName($tripName);
-        $trip->setTripDirection($tripDirection);
-        $trip->setStationLnks($path);
+    if(($tripDirection != "" && $tripName != "" && $path == "") || $path != "") {
+        if($tripName != "") $trip->setTripName($tripName);
+        if($tripDirection != "") $trip->setTripDirection($tripDirection);
+        if($path != "") $trip->setStationLnks($path);
         $trip->saveChanges();
         echo json_encode(["success" => "1"]);
     } else echo json_encode(["success" => "0", "error" => "missing fields"]);

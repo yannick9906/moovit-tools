@@ -1,7 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 
 .idea/
-.iml
+*.iml
 lib/
 svg/
 fonts/

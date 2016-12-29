@@ -9,8 +9,8 @@
             <div class="col s12 bolden orange-text text-darken-4">
                 Linien
             </div>
-            <div class="col s12" style="margin-top: 25px;">
-                <table class="highlight bordered" style="overflow-y: scroll; max-height: 80%;">
+            <div class="col s12" style="margin-top: 25px; overflow-y: scroll; max-height: 70vh;">
+                <table class="highlight bordered">
                     <tbody id="lineList">
                     <tr><td><i class="grey-text">Keine Linien vorhanden.</i></td></tr>
                     </tbody>
@@ -87,8 +87,8 @@
             <div class="col s12" style="margin-top: 25px;">
                 <a class="waves-effect waves-light btn right orange" onclick="createNewTrip();">Neuen Trip erstellen</a>
             </div>
-            <div class="col s12" style="margin-top: 25px;">
-                <table class="highlight bordered" style="overflow-y: scroll; max-height: 70%;">
+            <div class="col s12" style="margin-top: 25px; overflow-y: scroll; max-height: 50vh;">
+                <table class="highlight bordered">
                     <tbody id="tripList">
                     <tr><td><i class="grey-text">Keine Trips vorhanden.</i></td></tr>
                     </tbody>
@@ -101,11 +101,11 @@
             </div>
             <div class="col s12" style="margin-top: 25px;">
                 <div class="input-field col s8">
-                    <input id="new-nameLong" type="text">
-                    <label for="new-nameLong">Tripname</label>
+                    <input id="new-tripname" type="text">
+                    <label for="new-tripname">Tripname</label>
                 </div>
                 <div class="input-field col s4">
-                    <select id="new-type">
+                    <select id="new-tripDirection">
                         <option value="" disabled selected>Richtung</option>
                         <option value="0">inbound</option>
                         <option value="1">outbound</option>
@@ -116,6 +116,24 @@
             <div class="col s12" style="margin-top: 25px;">
                 <a class="waves-effect waves-light btn right orange" onclick="submitNewTrip();">Erstellen</a>
                 <a class="waves-effect waves-red btn-flat right" onclick="backToLines();">Abbrechen</a>
+            </div>
+        </div>
+        <div id="editortripsaddstationspanel" class="row">
+            <div class="col s12 bolden orange-text text-darken-4">
+                Trip erstellen
+            </div>
+            <div class="col s12" id="nextLinks" style="margin-top: 25px;">
+                Klicke eine Haltestelle als Startpunkt an.
+            </div>
+            <div class="col s12" style="margin-top: 25px; overflow-y: scroll; height: 60vh;">
+                <table class="highlight bordered">
+                    <tbody id="linkList">
+                        <tr><td><i class="grey-text">Keine Links vorhanden.</i></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col s12" style="margin-top: 25px;">
+                <a class="waves-effect waves-light btn right orange" onclick="submitTrip();">Erstellen</a>
             </div>
         </div>
     </div>

@@ -31,18 +31,29 @@ const tripListTempl = `
     `;
 const templateTrips = Handlebars.compile(tripListTempl);
 
+//// Trip Links Template
+const tripLinksTempl = `
+<tr>
+    <td><b>{{id}}:</b> {{destination}}</td>
+</tr>
+    `;
+const templateLinks = Handlebars.compile(tripLinksTempl);
+
 ////////////////////////////////////////////////////////////////////
 // Variables ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 let map;
 let markers = [];
 let idToMarker = {};
-let polylineBackup;
+let idBefore = [];
+let pathLine;
+let pathLatLngs = [];
 let polylines = [];
-let stationPos;
+let links = [];
 let currEdit = -1;
 let currMarkerPos = -1;
 let currEditLink = -1;
+let currID = -1;
 let lastMove = new Date().getTime();
 
 ////////////////////////////////////////////////////////////////////
@@ -123,14 +134,12 @@ function initMap() {
     map.addLayer(osmStreet);
 
     map.on("moveend", function() {
-        if(currEdit == -1)
             if((new Date().getTime())-lastMove >= 750) {
                 refreshStops();
                 lastMove = new Date().getTime();
             }
     });
     map.on("zoomend", function() {
-        if(currEdit == -1)
             if((new Date().getTime())-lastMove >= 750) {
                 refreshStops();
                 lastMove = new Date().getTime();
@@ -165,7 +174,9 @@ function refreshStops() {
                 {title: (e.name + " " + e.code), icon: icon}
             );
             thismarker.addTo(map);
-            thismarker.on('click', startStationLinks(e.id));
+            thismarker.on('click', function () {
+                startStationLinks(e.id, e.name + " " + e.code);
+            });
             markers.push(thismarker);
             idToMarker[i+"h"] = e.id;
         });
@@ -191,6 +202,7 @@ function backToLines() {
     $("#editorlinesaddpanel").hide();
     $("#editorlineseditpanel").hide();
     $("#editortripsaddpanel").hide();
+    $("#editortripsaddstationspanel").hide();
 
     loadLines();
     $("#editorlineslistpanel").show();
@@ -295,8 +307,8 @@ function createNewTrip() {
 }
 
 function submitNewTrip() {
-    data = {
-        name: $("#new-tripName").val(),
+    let data = {
+        name: $("#new-tripname").val(),
         lID: currEdit,
         direction: $("#new-tripDirection").val()
     };
@@ -304,12 +316,143 @@ function submitNewTrip() {
         let json = JSON.parse(response);
         if (json.success == "1") {
             Materialize.toast("Trip erstellt", 2000, "green");
+            currEditLink = json.id;
+            links = [];
+            idBefore = [];
+            pathLatLngs = [];
             $("#editortripsaddpanel").hide();
-            $("#editor")
+            $("#editortripsaddstationspanel").show();
         } else {
             if (json.error == "missing fields") {
                 Materialize.toast("Bitte alle Felder ausfüllen", 2000, "red");
             }
         }
     });
+}
+
+function removeTrip(id) {
+
+}
+
+function startStationLinks(stationID, stationName) {
+    if(currEditLink != -1 && pathLatLngs.length == 0) {
+        loadLinksFor(stationID);
+        $("#linkList").html(templateLinks({id:"Start",destination: stationName}))
+    }
+}
+
+function loadLinksFor(stationID) {
+    currID = stationID;
+    for (let i = 0; i < polylines.length; i++ ) {
+        map.removeLayer(polylines[i]);
+    }
+    polylines.length = 0;
+
+    pathLine = L.polyline(pathLatLngs,{
+        color: "red",
+        opacity: 1
+
+    });
+    pathLine.addTo(map);
+    let pathDecorator = L.polylineDecorator(pathLine,{
+        patterns: [
+            {offset: 75, repeat: 75, symbol: L.Symbol.arrowHead({pixelSize:12, pathOptions:{color: "red"}})}
+        ]
+    });
+
+    pathDecorator.addTo(map);
+    polylines.push(pathLine);
+    polylines.push(pathDecorator);
+
+    $.getJSON("api/stationlinks/getLinkForStation.php?id="+stationID,null, function(json) {
+        let list = json["links"];
+        $("#nextLinks").html("<br/>");
+        if(list.length == 0) {
+            $("#nextLinks").html("<br/> Keine Links von dieser Station aus vorhanden.<br/><a onclick='loadLinksFor("+stationID+")' class='btn btn-flat mddi mddi-refresh'>Neu laden</a>");
+        }
+        list.forEach(function (e) {
+            //Draw Polyline Preview
+            let color = generateRandomColor();
+            const path = JSON.parse(e.path);
+            let latlngs = [];
+            path.forEach(function(e) {
+                latlngs.push([e.lat, e.lng]);
+            });
+            let line = L.polyline(latlngs,{
+                color: color,
+                opacity: 1
+
+            });
+            line.addTo(map);
+            let decorator = L.polylineDecorator(line,{
+                patterns: [
+                    {offset: 75, repeat: 75, symbol: L.Symbol.arrowHead({pixelSize:12, pathOptions:{color: color}})}
+                ]
+            });
+
+            decorator.addTo(map);
+            polylines.push(line);
+            polylines.push(decorator);
+
+            $("#nextLinks").append("<a onclick='addLink("+e['id']+",\""+JSON.stringify(latlngs)+"\")' class='btn orange'>"+e['toStation']['name']+" "+e['toStation']['code']+"</a>");
+        });
+        $("#nextLinks").append("<br/><br/><a onclick='removeLastLink()' class='btn btn-flat'>Zurück</a>");
+
+    });
+}
+
+function addLink(lnkID, path) {
+    links.push(lnkID);
+    idBefore.push(currID);
+    console.log(JSON.parse(path));
+    pathLatLngs.push(JSON.parse(path));
+    $.getJSON("../api/stationlinks/details.php?id="+lnkID,null,function(json) {
+        let endStationID = json["toStation"]["id"];
+        $("#linkList").append(templateLinks({id:endStationID, destination: "-> "+json["toStation"]["name"]+" "+json["toStation"]["code"]}))
+        loadLinksFor(endStationID);
+    });
+}
+
+function removeLastLink() {
+    if(idBefore.length != 0) {
+        links.pop();
+        pathLatLngs.pop();
+        loadLinksFor(idBefore.pop())
+    } else {
+        pathLatLngs.length = 0;
+        links.length = 0;
+    }
+}
+
+function submitTrip() {
+    let data = {
+        path: JSON.stringify(links)
+    }
+    $.post("../api/trips/update.php?id="+currEditLink, data, function(e) {
+        let json = JSON.parse(e);
+        if (json.success == "1") {
+            Materialize.toast("Trip erstellt", 2000, "green");
+            $("#editortripsaddpanel").hide();
+            $("#editortripsaddstationspanel").hide();
+            $("#linkList").html("");
+            $("#nextLinks").html("");
+            let currEditBkp = currEdit;
+
+            for (let i = 0; i < polylines.length; i++ ) {
+                map.removeLayer(polylines[i]);
+            }
+            polylines.length = 0;
+            pathLatLngs.length = 0;
+            links.length = 0;
+            idBefore.length = 0;
+            currEditLink = -1;
+
+            backToLines();
+            editLine(currEditBkp);
+        } else {
+            if (json.error == "missing fields") {
+                Materialize.toast("Bitte alle Felder ausfüllen", 2000, "red");
+            }
+        }
+    })
 }

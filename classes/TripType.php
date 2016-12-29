@@ -10,7 +10,7 @@
 
 
     class TripType {
-        private $tripTypeID, $tripDirection, $tripLine, $tripName, $stationLnks;
+        private $tripTypeID, $tripDirection, $tripLine, $tripName, $stationLnks, $pdo;
 
         /**
          * TripType constructor.
@@ -27,6 +27,7 @@
             $this->tripDirection = $tripDirection;
             $this->tripName = $tripName;
             $this->stationLnks = $stationLnks;
+            $this->pdo = new PDO_MYSQL();
         }
 
         /**
@@ -37,6 +38,12 @@
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM moovit_tripTypes WHERE trID = :trid", [":trid" => $trID]);
             return new TripType($trID, Line::fromLID($res->lID), $res->tripDirection, utf8_encode($res->tripName), json_decode($res->path));
+        }
+
+        public static function getLastID() {
+            $pdo = new PDO_MYSQL();
+            $res = $pdo->query("SELECT trID FROM moovit_tripTypes ORDER BY trID DESC LIMIT 1");
+            return $res->trID;
         }
 
         /**
