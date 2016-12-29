@@ -114,3 +114,7 @@ header, main, footer {
 #map_canvas2 * {
     overflow:visible;
 }
+
+.showHand {
+    cursor: pointer;
+}

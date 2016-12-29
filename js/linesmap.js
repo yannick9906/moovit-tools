@@ -17,16 +17,16 @@ const template = Handlebars.compile(infoWindowTempl);
 
 //// Line List Template
 const lineListTempl = `
-<tr onclick="editLine({{id}})">
-    <td><b>{{shortName}}:</b> {{longName}}</td>
+<tr onclick="editLine({{id}})" class="showHand">
+    <td><b>{{shortName}}:</b> {{longName}}</td><td><a onclick="removeLine({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
 </tr>
     `;
 const templateLines = Handlebars.compile(lineListTempl);
 
 //// Trip List Template
 const tripListTempl = `
-<tr onclick="editTrip({{id}})">
-    <td>{{id}}:<b> {{name}}</b></td><td>{{direction}}</td>
+<tr onclick="editTrip({{id}})" class="showHand">
+    <td>{{id}}:<b> {{name}}</b></td><td>{{direction}}</td><td><a onclick="removeTrip({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
 </tr>
     `;
 const templateTrips = Handlebars.compile(tripListTempl);
@@ -331,7 +331,14 @@ function submitNewTrip() {
 }
 
 function removeTrip(id) {
-
+    $.getJSON("../api/trips/remove.php?id="+id,null,function(json) {
+        if (json.success == "1") {
+            Materialize.toast("Trip gelöscht", 2000, "green");
+            editLine(currEdit);
+        } else {
+            Materialize.toast("Fehler", 2000, "red");
+        }
+    });
 }
 
 function startStationLinks(stationID, stationName) {
@@ -368,7 +375,7 @@ function loadLinksFor(stationID) {
         let list = json["links"];
         $("#nextLinks").html("<br/>");
         if(list.length == 0) {
-            $("#nextLinks").html("<br/> Keine Links von dieser Station aus vorhanden.<br/><a onclick='loadLinksFor("+stationID+")' class='btn btn-flat mddi mddi-refresh'>Neu laden</a>");
+            $("#nextLinks").html("<br/> Keine Links von dieser Station aus vorhanden.<br/><a onclick='loadLinksFor("+stationID+")' class='btn btn-flat'><i class='mddi mddi-refresh'></i>Neu laden</a>");
         }
         list.forEach(function (e) {
             //Draw Polyline Preview

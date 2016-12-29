@@ -40,6 +40,9 @@
             return new TripType($trID, Line::fromLID($res->lID), $res->tripDirection, utf8_encode($res->tripName), json_decode($res->path));
         }
 
+        /**
+         * @return int
+         */
         public static function getLastID() {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT trID FROM moovit_tripTypes ORDER BY trID DESC LIMIT 1");
@@ -95,7 +98,14 @@
         }
 
         /**
-         * Creates a new station from the give attribs
+         * Deletes a triptype
+         */
+        public function delete() {
+            $this->pdo->query("DELETE FROM moovit_tripTypes WHERE trID = :trid", [":trid" => $this->tripTypeID]);
+        }
+
+        /**
+         * Creates a new trip from the give attribs
          *
          * @param $tripName string
          * @param $lID int
