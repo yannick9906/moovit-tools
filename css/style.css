@@ -118,3 +118,7 @@ header, main, footer {
 .showHand {
     cursor: pointer;
 }
+
+.btn {
+    margin-right: 5px;
+}

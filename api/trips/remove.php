@@ -20,5 +20,8 @@
 
     $trip = \moovit\TripType::fromTrID(intval($_GET["id"]));
 
-    $trip->delete();
-    echo json_encode(["success" => "1"]);
+    if($trip != null) {
+        $trip->delete();
+        echo json_encode(["success" => "1"]);
+    } else
+        echo json_encode(["error" => "ID unknown"]);

@@ -198,4 +198,14 @@
         public function setTripLine($tripLine) {
             $this->tripLine = $tripLine;
         }
+
+
+        public function getPath() {
+            $path = [];
+            foreach($this->stationLnks as $link) {
+                $link = StationLnk::fromLnkID($link);
+                $path = array_merge($path, $link->getPath());
+            }
+            return $path;
+        }
     }

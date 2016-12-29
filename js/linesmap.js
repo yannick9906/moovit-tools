@@ -462,15 +462,75 @@ function submitTrip() {
                 Materialize.toast("Bitte alle Felder ausfüllen", 2000, "red");
             }
         }
-    })
+    });
 }
 
 function editTrip(id) {
+    $("#editorlineseditpanel").hide();
+    $("#editortripsaddpanel").hide();
+    $("#editortripsaddstationspanel").hide();
+    $("#editortripseditpanel").show();
 
+    currEditLink = id;
+    $.getJSON("../api/trips/details.php?id="+id,null,function(json) {
+        $("#edit-tripname").val(json['name']);
+        $("#edit-tripDirection").val(parseInt(json['direction'])).change();
+        $('select').material_select();
+        Materialize.updateTextFields();
+    });
+
+    $.getJSON("../api/trips/getPath.php?id="+id, null, function(json) {
+
+        const color = "red";
+        const path = JSON.parse(json.path);
+        let latlngs = [];
+        path.forEach(function(e) {
+            latlngs.push([e.lat, e.lng]);
+        });
+        let line = L.polyline(latlngs,{
+            color: color,
+            opacity: 1
+
+        });
+        line.addTo(map);
+        let decorator = L.polylineDecorator(line,{
+            patterns: [
+                {offset: 75, repeat: 75, symbol: L.Symbol.arrowHead({pixelSize:12, pathOptions:{color: color}})}
+            ]
+        });
+
+        decorator.addTo(map);
+        polylines.push(line);
+        polylines.push(decorator);
+    });
+}
+
+function backToLine() {
+    currEditLink = -1;
+    for (let i = 0; i < polylines.length; i++ ) {
+        map.removeLayer(polylines[i]);
+    }
+    polylines.length = 0;
+    $("#editortripseditpanel").hide();
+    editLine(currEdit);
 }
 
 function submitEditTrip() {
-
+    let data = {
+        name: $("#edit-tripname").val(),
+        direction: $("#edit-tripDirection").val()
+    }
+    $.post("../api/trips/update.php?id="+currEditLink, data, function(e) {
+        let json = JSON.parse(e);
+        if (json.success == "1") {
+            Materialize.toast("Trip aktualisiert", 2000, "green");
+            backToLine();
+        } else {
+            if (json.error == "missing fields") {
+                Materialize.toast("Bitte alle Felder ausfüllen", 2000, "red");
+            }
+        }
+    })
 }
 
 function downloadAsKML() {

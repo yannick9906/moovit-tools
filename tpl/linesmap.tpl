@@ -157,6 +157,7 @@
             <div class="col s12" style="margin-top: 25px;">
                 <a class="waves-effect waves-light btn right orange" onclick="submitEditTrip();">Speichern</a>
                 <a class="waves-effect waves-light btn right orange" onclick="downloadAsKML();">KML</a>
+                <a class="waves-effect waves-light btn right btn-flat" onclick="backToLine();">Abbrechen</a>
             </div>
         </div>
     </div>
