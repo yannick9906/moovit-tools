@@ -85,6 +85,7 @@
                 <a class="waves-effect waves-red btn-flat right" onclick="backToLines();">Abbrechen</a>
             </div>
             <div class="col s12" style="margin-top: 25px;">
+                <a class="waves-effect waves-light btn right orange" onclick="downloadAllAsKML();">KML</a>
                 <a class="waves-effect waves-light btn right orange" onclick="createNewTrip();">Neuen Trip erstellen</a>
             </div>
             <div class="col s12" style="margin-top: 25px; overflow-y: scroll; max-height: 50vh;">
@@ -162,6 +163,7 @@
         </div>
     </div>
 </main>
+<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
 <script src="lib/awesome-markers/leaflet.awesome-markers.js"></script>
 <script src="lib/leaflet.polylineDecorator.js"></script>

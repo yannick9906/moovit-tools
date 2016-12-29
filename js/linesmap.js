@@ -54,6 +54,9 @@ let currEdit = -1;
 let currMarkerPos = -1;
 let currEditLink = -1;
 let currID = -1;
+let currentLine = 0;
+let currentTrip = "";
+let currentTripLatLngs = [];
 let lastMove = new Date().getTime();
 
 ////////////////////////////////////////////////////////////////////
@@ -258,7 +261,7 @@ function editLine(id) {
         $("#edit-type").val(parseInt(json['typeID'])).change();
         $('select').material_select();
         Materialize.updateTextFields();
-
+        currentLine = json['nameShort'];
 
         $.getJSON("../api/trips/getTripsForLine.php?id="+id, null, function(json)  {
             if(json['trips'].length != 0) {
@@ -477,6 +480,8 @@ function editTrip(id) {
         $("#edit-tripDirection").val(parseInt(json['direction'])).change();
         $('select').material_select();
         Materialize.updateTextFields();
+
+        currentTrip = json['name'];
     });
 
     $.getJSON("../api/trips/getPath.php?id="+id, null, function(json) {
@@ -487,6 +492,7 @@ function editTrip(id) {
         path.forEach(function(e) {
             latlngs.push([e.lat, e.lng]);
         });
+        currentTripLatLngs = latlngs;
         let line = L.polyline(latlngs,{
             color: color,
             opacity: 1
@@ -534,9 +540,15 @@ function submitEditTrip() {
 }
 
 function downloadAsKML() {
-
+    let tosave = "lat,lng\n";
+    currentTripLatLngs.forEach(function(e) {
+        tosave += e[0]+","+e[1]+"\n";
+    });
+    var blob = new Blob([tosave], {type: "application/vnd.google-earth.kml+xml;charset=utf-8"});
+    saveAs(blob, "line"+currentLine+"-"+currentTrip+".kml");
 }
 
 function downloadAllAsKML() {
-
+    //Todo
+    saveAs(blob, "line"+currentLine+"-complete.kml");
 }
