@@ -136,6 +136,29 @@
                 <a class="waves-effect waves-light btn right orange" onclick="submitTrip();">Erstellen</a>
             </div>
         </div>
+        <div id="editortripseditpanel" class="row">
+            <div class="col s12 bolden orange-text text-darken-4">
+                Trip bearbeiten
+            </div>
+            <div class="col s12" style="margin-top: 25px;">
+                <div class="input-field col s8">
+                    <input id="edit-tripname" type="text">
+                    <label for="edit-tripname">Tripname</label>
+                </div>
+                <div class="input-field col s4">
+                    <select id="edit-tripDirection">
+                        <option value="" disabled selected>Richtung</option>
+                        <option value="0">inbound</option>
+                        <option value="1">outbound</option>
+                    </select>
+                    <label>Richtung</label>
+                </div>
+            </div>
+            <div class="col s12" style="margin-top: 25px;">
+                <a class="waves-effect waves-light btn right orange" onclick="submitEditTrip();">Speichern</a>
+                <a class="waves-effect waves-light btn right orange" onclick="downloadAsKML();">KML</a>
+            </div>
+        </div>
     </div>
 </main>
 <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>

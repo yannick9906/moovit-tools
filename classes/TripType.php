@@ -71,12 +71,20 @@
             $stmt = $pdo->queryMulti("select * from moovit_tripTypes where lID = :lineID", [":lineID" => $line->getLineID()]);
             $hits = ["trips" => []];
             while($row = $stmt->fetchObject()) {
+                $destination = "";
+                $path = json_decode($row->path);
+                if(sizeof($path) != 0) {
+                    $lastLink = StationLnk::fromLnkID(array_pop($path));
+                    $endStation = $lastLink->getToStation();
+                    $destination = $endStation->getStationName()." ".$endStation->getCode();
+                }
                 array_push($hits["trips"], [
                     "id" => $row->trID,
                     "line" => Line::fromLID($row->lID)->asArray(),
                     "direction" => $row->tripDirection,
                     "name" => utf8_encode($row->tripName),
                     "links" => $row->path,
+                    "destination" => $destination,
                     "check" => md5($row->trID+$row->lID+$row->path+$row->tripName+$row->tripDirection)
                 ]);
             }

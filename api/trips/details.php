@@ -18,7 +18,7 @@
     $user = \moovit\Util::checkSession();
     $pdo = new \moovit\PDO_MYSQL();
 
-    $trip = \moovit\TripType::fromLID(intval($_GET["id"]));
+    $trip = \moovit\TripType::fromTrID(intval($_GET["id"]));
     if($trip != null)
         echo json_encode($trip->asArray());
     else

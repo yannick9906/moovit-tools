@@ -14,6 +14,8 @@
     require_once '../../classes/Util.php';
     require_once '../../classes/Line.php';
     require_once '../../classes/TripType.php';
+    require_once '../../classes/Station.php';
+    require_once '../../classes/StationLnk.php';
 
     $user = \moovit\Util::checkSession();
     $pdo = new \moovit\PDO_MYSQL();

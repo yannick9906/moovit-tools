@@ -26,7 +26,7 @@ const templateLines = Handlebars.compile(lineListTempl);
 //// Trip List Template
 const tripListTempl = `
 <tr onclick="editTrip({{id}})" class="showHand">
-    <td>{{id}}:<b> {{name}}</b></td><td>{{direction}}</td><td><a onclick="removeTrip({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
+    <td>{{id}}:<b> {{name}}</b><br/>-> {{destination}}</td><td>{{direction}}</td><td><a onclick="removeTrip({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
 </tr>
     `;
 const templateTrips = Handlebars.compile(tripListTempl);
@@ -203,6 +203,7 @@ function backToLines() {
     $("#editorlineseditpanel").hide();
     $("#editortripsaddpanel").hide();
     $("#editortripsaddstationspanel").hide();
+    $("#editortripseditpanel").hide();
 
     loadLines();
     $("#editorlineslistpanel").show();
@@ -265,7 +266,7 @@ function editLine(id) {
                 json['trips'].forEach(function(e, i, a) {
                     let direction = "inbound";
                     if(e['direction'] == 1) direction = "outbound";
-                    $("#tripList").append(templateTrips({id: e['id'], name: e['name'], direction: direction}));
+                    $("#tripList").append(templateTrips({id: e['id'], name: e['name'], direction: direction, destination: e['destination']}));
                 });
             } else {
                 $("#tripList").html("<tr><td><i class=\"grey-text\">Keine Trips vorhanden.</i></td></tr>");
@@ -462,4 +463,20 @@ function submitTrip() {
             }
         }
     })
+}
+
+function editTrip(id) {
+
+}
+
+function submitEditTrip() {
+
+}
+
+function downloadAsKML() {
+
+}
+
+function downloadAllAsKML() {
+
 }
