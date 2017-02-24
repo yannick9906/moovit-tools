@@ -88,7 +88,7 @@
                 <a class="waves-effect waves-light btn right orange" onclick="downloadAllAsKML();">KML</a>
                 <a class="waves-effect waves-light btn right orange" onclick="createNewTrip();">Neuen Trip erstellen</a>
             </div>
-            <div class="col s12" style="margin-top: 25px; overflow-y: scroll; max-height: 50vh;">
+            <div class="col s12" style="margin-top: 25px; overflow-y: scroll; max-height: 40vh;">
                 <table class="highlight bordered">
                     <tbody id="tripList">
                     <tr><td><i class="grey-text">Keine Trips vorhanden.</i></td></tr>
@@ -126,7 +126,7 @@
             <div class="col s12" id="nextLinks" style="margin-top: 25px;">
                 Klicke eine Haltestelle als Startpunkt an.
             </div>
-            <div class="col s12" style="margin-top: 25px; overflow-y: scroll; height: 60vh;">
+            <div class="col s12" style="margin-top: 25px; overflow-y: scroll; height: 50vh;">
                 <table class="highlight bordered">
                     <tbody id="linkList">
                         <tr><td><i class="grey-text">Keine Links vorhanden.</i></td></tr>

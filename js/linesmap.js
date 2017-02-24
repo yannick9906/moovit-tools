@@ -339,6 +339,7 @@ function removeTrip(id) {
         if (json.success == "1") {
             Materialize.toast("Trip gelöscht", 2000, "green");
             editLine(currEdit);
+            $("#editortripseditpanel").hide();
         } else {
             Materialize.toast("Fehler", 2000, "red");
         }
