@@ -115,7 +115,7 @@
          */
         public static function getMapList($boundALat, $boundALng, $boundBLat, $boundBLng) {
             $pdo = new PDO_MYSQL();
-            $stmt = $pdo->queryMulti("select * from moovit_stations where (posLat between :boundBLat and :boundALat) and (posLon between :boundBLon and :boundALon)", [":boundALat" => $boundALat, ":boundALon" => $boundALng, ":boundBLat" => $boundBLat, ":boundBLon" => $boundBLng]);
+            $stmt = $pdo->queryMulti("select * from moovit_stations where prID = :prID and (posLat between :boundBLat and :boundALat) and (posLon between :boundBLon and :boundALon)", [":boundALat" => $boundALat, ":boundALon" => $boundALng, ":boundBLat" => $boundBLat, ":boundBLon" => $boundBLng, ":prID" => $_SESSION["prID"]]);
             $hits = ["stations" => []];
             while($row = $stmt->fetchObject()) {
                 array_push($hits["stations"], [

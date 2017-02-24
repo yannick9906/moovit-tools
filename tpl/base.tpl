@@ -46,7 +46,7 @@
                         <img class="background" src="css/moovit.jpg">
                         <a href="#!"><div class="circle red center white-text" style="font-size: 40px; line-height: 65px;">{$args.usrchar}</div></a>
                         <a href="#!"><span class="white-text name" style="text-shadow: 1px 1px 5px black;">{$args.realname}</span></a>
-                        <a href="#!"><span class="white-text email" style="text-shadow: 1px 1px 5px black;">{$args.email}</span></a>
+                        <a href="#!"><span class="white-text email" style="text-shadow: 1px 1px 5px black;">{$args.projectname}</span></a>
                     </div></li>
                 <li id="nav-account"><a href="#!"><i class="material-icons">person</i>Account</a></li>
                 <li class="sub" id="nav-logout"><a href="login.php?err=3">Logout</a></li>
@@ -54,8 +54,8 @@
                 <li class="subheader"><a class="subheader orange-text text-darken-4 bolden">Projekt</a></li>
                 <li class="sub" id="nav-project"><a href="project.php">Info</a></li>
                 <li class="sub" id="nav-map"><a href="map.php">Karte</a></li>
-                <li class="sub" id="nav-stations"><a href="stations.php">Haltestellen</a></li>
-                <li class="sub" id="nav-lnks"><a href="stationLnks.php">Station Links</a></li>
+                <!--<li class="sub" id="nav-stations"><a href="stations.php">Haltestellen</a></li>-->
+                <!--<li class="sub" id="nav-lnks"><a href="stationLnks.php">Station Links</a></li>-->
                 <li class="sub" id="nav-lines"><a href="linesmap.php">Linien</a></li>
                 <li><div class="divider"></div></li>
                 <li><a class="subheader orange-text text-darken-4 bolden">Tools</a></li>

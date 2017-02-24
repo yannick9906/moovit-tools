@@ -72,7 +72,8 @@ class Util {
                 "editor" => $editor ? 1:0,
                 "undoUrl" => $undoUrl,
                 "backable" => $backable ? 1:0,
-                "highlight" => $highlight
+                "highlight" => $highlight,
+                "projectname" => $user->getProject()->getProjectName()
             ],
             "page" => []
         ];
