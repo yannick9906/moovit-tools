@@ -22,7 +22,7 @@
     $lineLong = $_POST["nameLong"];
     $type = intval($_POST["type"]);
 
-    if($lineShort != "" && $lineLong != "" && $type != "") {
+    if($lineShort != "" && $lineLong != "") {
         \moovit\Line::createLine($user, $lineShort, $lineLong, $type);
         echo json_encode(["success" => "1"]);
     } else  echo json_encode(["success" => "0", "error" => "missing fields"]);

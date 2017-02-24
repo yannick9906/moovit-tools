@@ -244,8 +244,8 @@
         }
 
         public function refreshStationPos() {
-            $this->path[0] = ["lat" => $this->fromStation->getPosLat(), "lng" => $this->fromStation->getPosLon()];
-            $this->path[sizeof($this->path)-1] = ["lat" => $this->toStation->getPosLat(), "lng" => $this->toStation->getPosLon()];
+            $this->path[0] = ["lat" => floatval($this->fromStation->getPosLat()), "lng" => floatval($this->fromStation->getPosLon())];
+            $this->path[sizeof($this->path)-1] = ["lat" => floatval($this->toStation->getPosLat()), "lng" => floatval($this->toStation->getPosLon())];
             $this->saveChanges();
         }
     }

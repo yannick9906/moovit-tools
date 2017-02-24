@@ -377,7 +377,7 @@ function loadLinksFor(stationID) {
 
     $.getJSON("api/stationlinks/getLinkForStation.php?id="+stationID,null, function(json) {
         let list = json["links"];
-        $("#nextLinks").html("<br/>");
+        $("#nextLinks").html("Folgende Links sind von hier verfügbar: <br/>");
         if(list.length == 0) {
             $("#nextLinks").html("<br/> Keine Links von dieser Station aus vorhanden.<br/><a onclick='loadLinksFor("+stationID+")' class='btn btn-flat'><i class='mddi mddi-refresh'></i>Neu laden</a>");
         }
