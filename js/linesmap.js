@@ -97,59 +97,60 @@ function generateRandomColor(mix) {
 }
 
 function initMap() {
-    //stationPos = new google.maps.LatLng(50, 8.3);
-    const streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFubmljazk5IiwiYSI6ImNpeDF6bmRtZjAwMHUyb3NicXg1YXJmbGwifQ.k6lN8qn7o7AHFzl2lKq1xA', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            maxZoom: 20,
-            minZoom: 2
-        }),
-        satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFubmljazk5IiwiYSI6ImNpeDF6bmRtZjAwMHUyb3NicXg1YXJmbGwifQ.k6lN8qn7o7AHFzl2lKq1xA', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            maxZoom: 20,
-            minZoom: 2
-        }),
-        osmStreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 19,
-            minZoom: 2
-        }),
-        osmÖpnv = L.tileLayer('http://www.openptmap.org/tiles/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-            minZoom: 2
-        }),
-        googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-            attribution: 'Map data &copy; <a href="http://maps.google.com">Google Maps</a> contributors',
-            maxZoom: 21,
-            minZoom: 2
+    $.getJSON("api/users/getProjectCoords.php",null,function(json) {
+        const streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFubmljazk5IiwiYSI6ImNpeDF6bmRtZjAwMHUyb3NicXg1YXJmbGwifQ.k6lN8qn7o7AHFzl2lKq1xA', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 20,
+                minZoom: 2
+            }),
+            satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFubmljazk5IiwiYSI6ImNpeDF6bmRtZjAwMHUyb3NicXg1YXJmbGwifQ.k6lN8qn7o7AHFzl2lKq1xA', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 20,
+                minZoom: 2
+            }),
+            osmStreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+                maxZoom: 19,
+                minZoom: 2
+            }),
+            osmÖpnv = L.tileLayer('http://www.openptmap.org/tiles/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+                maxZoom: 17,
+                minZoom: 2
+            }),
+            googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                attribution: 'Map data &copy; <a href="http://maps.google.com">Google Maps</a> contributors',
+                maxZoom: 21,
+                minZoom: 2
+            });
+
+        const baseMaps = {
+            "Mapbox Hybrid": satellite,
+            "Mapbox Straße": streets,
+            "OSM Straße": osmStreet,
+            "OSM ÖPNV": osmÖpnv,
+            "Google Maps Hybrid": googleHybrid
+        };
+
+        map = L.map('map_canvas', {editable: true}).setView([json.lat, json.lng], 12);
+        L.control.layers(baseMaps).addTo(map);
+        map.addLayer(osmStreet);
+
+        map.on("moveend", function () {
+            if ((new Date().getTime()) - lastMove >= 750) {
+                refreshStops();
+                lastMove = new Date().getTime();
+            }
         });
-
-    const baseMaps = {
-        "Mapbox Hybrid": satellite,
-        "Mapbox Straße": streets,
-        "OSM Straße": osmStreet,
-        "OSM ÖPNV": osmÖpnv,
-        "Google Maps Hybrid": googleHybrid
-    };
-
-    map = L.map('map_canvas', {editable: true}).setView([50, 8.3], 12);
-    L.control.layers(baseMaps).addTo(map);
-    map.addLayer(osmStreet);
-
-    map.on("moveend", function() {
-            if((new Date().getTime())-lastMove >= 750) {
+        map.on("zoomend", function () {
+            if ((new Date().getTime()) - lastMove >= 750) {
                 refreshStops();
                 lastMove = new Date().getTime();
             }
+        });
+        refreshStops();
+        backToLines();
     });
-    map.on("zoomend", function() {
-            if((new Date().getTime())-lastMove >= 750) {
-                refreshStops();
-                lastMove = new Date().getTime();
-            }
-    });
-    refreshStops();
-    backToLines();
 }
 
 function refreshStops() {

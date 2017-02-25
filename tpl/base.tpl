@@ -59,11 +59,11 @@
                 <li class="sub" id="nav-lines"><a href="linesmap.php">Linien</a></li>
                 <li><div class="divider"></div></li>
                 <li><a class="subheader orange-text text-darken-4 bolden">Tools</a></li>
-                <li class="sub" id="nav-timetable"><a href="#!">Fahrplan</a></li>
+                <li class="sub" id="nav-timetable"><a href="depart.php">Fahrplan</a></li>
                 <li><div class="divider"></div></li>
-                <li><a class="subheader orange-text text-darken-4 bolden">Administration</a></li>
+                {if $args.uID == 1}<li><a class="subheader orange-text text-darken-4 bolden">Administration</a></li>
                 <li class="sub" id="nav-database"><a href="../adminer/">Datenbank</a></li>
-                <li><div class="divider"></div></li>
+                <li><div class="divider"></div></li>{/if}
             </ul>
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
         </div>

@@ -10,15 +10,17 @@
 
 
     class Project {
-        private $pdo, $projectID, $projectName, $lineCount, $tripCount, $stopCount, $linkCount;
+        private $pdo, $projectID, $projectName, $lineCount, $tripCount, $stopCount, $linkCount, $center_lat, $center_lng;
 
         /**
          * Project constructor.
          *
          * @param $projectID
          * @param $projectName
+         * @param $center_lat
+         * @param $center_lng
          */
-        public function __construct($projectID, $projectName) {
+        public function __construct($projectID, $projectName, $center_lat, $center_lng) {
             $this->projectID = $projectID;
             $this->projectName = $projectName;
             $this->pdo = new PDO_MYSQL();
@@ -26,12 +28,14 @@
             $this->tripCount = $this->pdo->query("select count(*) as count from moovit_tripTypes where lID in(select lID from moovit_lines where prID = :prID)", [":prID" => $projectID])->count;
             $this->stopCount = $this->pdo->query("select count(*) as count from moovit_stations where prID = :prID", [":prID" => $projectID])->count;
             $this->linkCount = $this->pdo->query("select count(*) as count from moovit_stationLnks where startStationID in(select stID from moovit_stations where prID = :prID)", [":prID" => $projectID])->count;
+            $this->center_lat = $center_lat;
+            $this->center_lng = $center_lng;
         }
 
         public static function fromPrID($prID) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM moovit_projects WHERE prID = :prid", [":prid" => $prID]);
-            return new Project($prID, $res->projectName);
+            return new Project($prID, $res->projectName, $res->center_lat, $res->center_lng);
         }
 
         public function asArray() {
@@ -43,6 +47,10 @@
                 "stopCount" => $this->stopCount,
                 "linkCount" => $this->linkCount
             ];
+        }
+
+        public function getCenter() {
+            return ["lat" => $this->center_lat,"lng" => $this->center_lng];
         }
 
         /**
