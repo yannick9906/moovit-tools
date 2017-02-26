@@ -59,13 +59,8 @@
                 <thead>
                 </thead>
                 <tbody id="timeTable" style="padding-top: 0; padding-bottom: 0;">
-                <tr>
-                    <td> Bahnstraße</td>
-                    <td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,1)">+</a>4.45</td><td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,2)">+</a>5.15</td>
-                    <td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,3)">+</a>5.45</td><td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,4)">+</a>6.15</td>
-                    <td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,5)">+</a>6.30</td><td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,6)">+</a>6.45</td>
-                    <td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,7)">+</a>7.00</td><td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,8)">+</a>7.15</td>
-                    <td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,9)">+</a>7.30</td><td class="bolden"><a class="green-text bolden" onclick="addSpace(event,0,10)">+</a>7.45</td>
+                </tbody>
+            </table>
             <div style="position: fixed; top:0; left: 0; z-index: 99;" id="fl_menu">
                 <button id="btnAddSpace" class="btn orange waves-effect waves-light col s3" onclick="actionAddSpaces()"
                         type="button">
