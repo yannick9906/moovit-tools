@@ -49,7 +49,7 @@
                         <label for="password">Passwort</label>
                         <br/><br/>
                     </div>
-                    <a href="../" class="btn btn-flat orange-text col s2 offset-s5"><i class="material-icons large">clear</i></a>
+                    <!--<a href="../" class="btn btn-flat orange-text col s2 offset-s5"><i class="material-icons large">clear</i></a>-->
                     <button class="btn waves-effect waves-light orange col s4 offset-s1" onclick="doLogin()">
                         <i class="mddi mddi-send"></i>
                     </button>
