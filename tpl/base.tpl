@@ -43,12 +43,12 @@
             <a href="#!" class="brand-logo hide-on-large-only orange-text">Moovit Tool</a>
             <ul id="slide-out" class="side-nav fixed">
                 <li><div class="userView">
-                        <img class="background" src="css/moovit.jpg">
+                        <img class="background" src="css/mvg.jpg" width="300px">
                         <a href="#!"><div class="circle red center white-text" style="font-size: 40px; line-height: 65px;">{$args.usrchar}</div></a>
                         <a href="#!"><span class="white-text name" style="text-shadow: 1px 1px 5px black;">{$args.realname}</span></a>
                         <a href="#!"><span class="white-text email" style="text-shadow: 1px 1px 5px black;">{$args.projectname}</span></a>
                     </div></li>
-                <li id="nav-account"><a href="#!"><i class="material-icons">person</i>Account</a></li>
+                <li id="nav-account"><a href="account.php"><i class="material-icons">person</i>Account</a></li>
                 <li class="sub" id="nav-logout"><a href="login.php?err=3">Logout</a></li>
                 <li><div class="divider"></div></li>
                 <li class="subheader"><a class="subheader orange-text text-darken-4 bolden">Projekt</a></li>

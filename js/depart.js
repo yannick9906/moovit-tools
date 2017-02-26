@@ -1,15 +1,26 @@
 /**
  * Created by yanni on 2017-02-25.
  */
-var timetable = [];
-var trips = [];
-var first = true;
-var lastClick = -1;
-var line = 0;
-var direction = "in";
-var day = "MoFr";
+let timetable = [];
+let trips = [];
+let first = true;
+let lastClick = -1; //Deprecated
+let lastClicki = -1;
+let lastClicki1 = -1;
+let lastEndi = -1;
+let lastEndi1 = -1;
+let line = 0;
+let direction = "in";
+let day = "MoFr";
 
 $(document).ready(function() {
+    $.support.selectstart = "onselectstart" in document.createElement("div");
+    $.fn.disableSelection = function() {
+        return this.bind( ( $.support.selectstart ? "selectstart" : "mousedown" ) +
+            ".ui-disableSelection", function( event ) {
+            event.preventDefault();
+        });
+    };
     $("#tripTypes").hide();
     $("#intervalTypes").hide();
     $("select").material_select();
@@ -118,23 +129,93 @@ function removeSpace(e ,i, i1) {
     printToTable();
 }
 
-function printToTable() {
+function actionAddSpaces() {
+    let selStarti = Math.min(lastClicki, lastEndi);
+    let selStartj = Math.min(lastClicki1, lastEndi1);
+    let selEndi = Math.max(lastClicki, lastEndi);
+    let selEndj = Math.max(lastClicki, lastEndi1);
+    for(let i = selStarti; i <= selEndi; i++) {
+        let stop = timetable[i];
+        for(let j = 0; j <= (selEndj-selStartj); j++) {
+            stop.splice(selStartj, 0, "|")
+        }
+        timetable[i] = stop;
+    }
+    lastClicki = -1;
+    lastClicki1 = -1;
+    lastEndi = -1;
+    lastEndi1 = -1;
+    printToTable();
+}
+
+function actionRemoveSpaces() {
+    let selStarti = Math.min(lastClicki, lastEndi);
+    let selStartj = Math.min(lastClicki1, lastEndi1);
+    let selEndi = Math.max(lastClicki, lastEndi);
+    let selEndj = Math.max(lastClicki, lastEndi1);
+    for(let i = selStarti; i <= selEndi; i++) {
+        let stop = timetable[i];
+        for(let j = 0; j <= (selEndj-selStartj); j++) {
+            stop.splice(selStartj, 1)
+        }
+        timetable[i] = stop;
+    }
+    lastClicki = -1;
+    lastClicki1 = -1;
+    lastEndi = -1;
+    lastEndi1 = -1;
+    printToTable();
+}
+
+
+function printToTable(selStarti, selStarti1, selEndi, selEndi1) {
     $("#timeTable").html("");
-    timetable.forEach(function(e, i, a) {
+    $("#fl_menu").hide();
+    for(let i = 0; i < timetable.length; i++) {
+        let e = timetable[i];
         $("#timeTable").append("<tr>");
-        e.forEach(function(e1, i1, a1) {
+        for(let i1 = 0; i1 < e.length; i1++) {
+            let e1 = e[i1]
             if(i1 != 0) {
                 if(e1 != "|") {
-                    $("#timeTable").append("<td class='bolden'><a class='green-text bolden' onclick='addSpace(event,"+i+","+i1+")'>+</a>"+e1+"</tdclass>");
+                    $("#timeTable").append("<td class='bolden' id='cell"+i+""+i1+"'>"+e1+"</tdclass>");
                 } else {
-                    $("#timeTable").append("<td><a class='red-text bolden' onclick='removeSpace(event,"+i+","+i1+")'>-</a>"+e1+"</td>");
+                    $("#timeTable").append("<td id='cell"+i+""+i1+"'>"+e1+"</td>");
                 }
+                if(i >= selStarti && i <= selEndi && i1 >= selStarti1 && i1 <= selEndi1) $("#cell" + i + "" + i1).addClass("orange");
+                $("#cell"+i+""+i1).on("click", function(e) {
+                    e.preventDefault();
+                    if(e.shiftKey && lastClicki != -1) {
+                        console.log("Shiftclick");
+                        printToTable(Math.min(lastClicki,i), Math.min(lastClicki1,i1), Math.max(i,lastClicki), Math.max(i1,lastClicki1));
+                        let cell = $("#cell"+Math.min(lastClicki, i)+""+Math.max(lastClicki1, i1));
+                        let pos = cell.offset();
+                        pos.left += cell.width()+20;
+                        $("#fl_menu").css(pos);
+                        $("#fl_menu").show();
+                        lastEndi = i;
+                        lastEndi1 = i1;
+                    } else {
+                        console.log("Click");
+                        printToTable(i, i1, i, i1);
+                        lastClicki = i;
+                        lastClicki1 = i1;
+                        let cell = $("#cell"+Math.min(lastClicki, i)+""+Math.max(lastClicki1, i1));
+                        let pos = cell.offset();
+                        pos.left += cell.width()+20;
+                        $("#fl_menu").css(pos);
+                        $("#fl_menu").show();
+                        lastEndi = i;
+                        lastEndi1 = i1;
+                    }
+
+                }).disableSelection();
             } else {
                 $("#timeTable").append("<td>"+e1+"</td>");
             }
-        });
+        }
         $("#timeTable").append("</tr>");
-    });
+    }
 }
 
 function calcTripTypes() {
@@ -191,11 +272,11 @@ function printTripTypes() {
 
 function biggestArraySize() {
     var size = 0;
-    timetable.forEach(function(e, i, a) {
-        if(e.length > size) {
-            size = e.length;
+    for(let i = 0; i < timetable.length; i++) {
+        if(timetable[i].length > size) {
+            size = timetable[i].length;
         }
-    });
+    }
     return size;
 }
 
@@ -343,4 +424,15 @@ function load(event) {
     $("#day").val(split2[2]);
     Materialize.updateTextFields();
     updateInfo();
+}
+
+function togglePage() {
+    let addPage = $("#addPage")
+    if(addPage.is(":visible")) {
+        addPage.hide();
+        $("#btnTogglePage").html("<i class=\"mddi mddi-plus-box\"></i> open")
+    } else {
+        addPage.show();
+        $("#btnTogglePage").html("<i class=\"mddi mddi-minus-box\"></i> close")
+    }
 }

@@ -1,4 +1,4 @@
-<footer class="page-footer orange">
+<footer class="page-footer orange" style="position: fixed; bottom: 0;z-index: 100;">
     <div class="footer-copyright">
         <div class="container">
             ©2016 Yannick Félix

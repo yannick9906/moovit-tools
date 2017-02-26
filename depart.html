@@ -277,11 +277,11 @@
 
     function biggestArraySize() {
         var size = 0;
-        timetable.forEach(function(e, i, a) {
-            if(e.length > size) {
-                size = e.length;
+        for(let i = 0; i < timetable.length; i++) {
+            if(timetable[i].length > size) {
+                size = timetable[i].length;
             }
-        });
+        }
         return size;
     }
 
