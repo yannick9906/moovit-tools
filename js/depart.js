@@ -4,7 +4,6 @@
 let timetable = [];
 let trips = [];
 let first = true;
-let lastClick = -1; //Deprecated
 let lastClicki = -1;
 let lastClicki1 = -1;
 let lastEndi = -1;
@@ -12,6 +11,7 @@ let lastEndi1 = -1;
 let line = 0;
 let direction = "in";
 let day = "MoFr";
+let type = "mvg";
 
 $(document).ready(function() {
     $.support.selectstart = "onselectstart" in document.createElement("div");
@@ -33,107 +33,126 @@ function updateInfo() {
 }
 
 function addPage() {
-    var newPage = $("#addPageInput").val();
+    let newPage = $("#addPageInput").val();
     newPage = newPage.replace(/u¨/g, "ü");
     newPage = newPage.replace(/a¨/g, "ä");
     newPage = newPage.replace(/o¨/g, "ö");
     newPage = newPage.replace(/\n$/, "");
-    var newPageLines = newPage.split("\n");
+    let newPageLines = newPage.split("\n");
 
-    if(first) {
-        newPageLines.forEach(function (e, i, a) {
-            var splitted = e.split(" ");
-            var name = "";
-            var times = [];
-            splitted.forEach(function (e1, i1, a1) {
-                if (e1.includes(".") && !e1.match(/[a-z]/i)) {
-                    times.push(e1)
-                } else {
-                    name += " " + e1;
+    type = $("#type").val();
+    if(type == "mvg") {
+        if (first) {
+            for(let i = 0; i < newPageLines.length; i++) {
+                let splitted = newPageLines[i].split(" ");
+
+                let name = "";
+                let times = [];
+                for(let i1 = 0; i1 < splitted.length; i1++) {
+                    let e1 = splitted[i1];
+                    if (e1.includes(".") && !e1.match(/[a-z]/i)) {
+                        times.push(e1)
+                    } else {
+                        name += " " + e1;
+                    }
                 }
-            })
-            var array = [name];
-            timetable.push(array.concat(times))
-        });
-        first = false;
-    } else {
-        newPageLines.forEach(function (e, i, a) {
-            var splitted = e.split(" ");
-            var name = "";
-            var times = [];
-            splitted.forEach(function (e1, i1, a1) {
-                if (e1.includes(".") && !e1.match(/[a-z]/i)) {
-                    times.push(e1)
-                } else {
-                    name += " " + e1;
+
+                let array = [name];
+                timetable.push(array.concat(times))
+            }
+            first = false;
+        } else {
+            for(let i = 0; i < newPageLines.length; i++) {
+                let splitted = newPageLines[i].split(" ");
+
+                let name = "";
+                let times = [];
+                for(let i1 = 0; i1 < splitted.length; i1++) {
+                    let e1 = splitted[i1];
+                    if (e1.includes(".") && !e1.match(/[a-z]/i)) {
+                        times.push(e1)
+                    } else {
+                        name += " " + e1;
+                    }
                 }
-            });
-            var existing = timetable[i];
-            timetable[i] = existing.concat(times);
-        });
+
+                let existing = timetable[i];
+                timetable[i] = existing.concat(times);
+            }
+        }
+    } else if(type == "lvb") {
+        if (first) {
+            for(let i = 0; i < newPageLines.length; i++) {
+                let splitted = newPageLines[i].split(" ");
+
+                let name = "";
+                let times = [];
+                for(let i1 = 0; i1 < splitted.length; i1++) {
+                    let e1 = splitted[i1];
+                    if(e1 == ".....") {
+                        times.push("|");
+                        //console.log(e1+" =>Space");
+                    } else if (e1.includes(".") && !e1.match(/[a-z]/i) && !e1.includes("..") && !e1.includes("...")) {
+                        times.push(e1);
+                        //console.log(e1+" =>Time");
+                    } else if(e1.includes("Alle")) {
+                        try {
+                            if (/^\d+$/.test(splitted[i1 + 1])) {
+                                //Found repeat option in this row
+                                console.log("should copy times every " + splitted[i1 + 1] + "mins");
+                            } else if(/^\d+$/.test(newPageLines[i+1].split(" ")[i1])) {
+                                //Found repeat option in next row
+                                console.log("should copy times every " + newPageLines[i+1].split(" ")[i1] + "mins");
+                            } else {
+                                console.log(splitted[i1 + 1] + " => Nope")
+                            }
+                        } catch(e) {}
+                    } else {
+                        e1 = e1.replace(/\./g, ""); //Filter points
+                        e1 = e1.replace(/Min/g,""); //Filter "Min"
+                        name += " " + e1;
+                        //console.log(e1 + " =>Name");
+                    }
+                }
+
+                let array = [name];
+                timetable.push(array.concat(times))
+            }
+            first = false;
+        } else {
+            for(let i = 0; i < newPageLines.length; i++) {
+                let splitted = newPageLines[i].split(" ");
+
+                let name = "";
+                let times = [];
+                for(let i1 = 0; i1 < splitted.length; i1++) {
+                    let e1 = splitted[i1];
+                    if (e1.includes(".") && !e1.match(/[a-z]/i)) {
+                        times.push(e1);
+                    } else if(e1 == ".....") {
+                        times.push("|");
+                    } else {
+                        if(!e1.includes(".."))
+                            name += " " + e1;
+                    }
+                }
+
+                let existing = timetable[i];
+                timetable[i] = existing.concat(times);
+            }
+        }
     }
-    console.log(timetable)
+    console.log(timetable);
     $("#addPageInput").val("");
     Materialize.updateTextFields();
     printToTable()
-}
-
-function addSpace(e ,i, i1) {
-    e.preventDefault();
-    if(e.shiftKey && lastClick != -1) {
-        if(i >= lastClick) {
-            for(var j = lastClick+1; j <= i; j++) {
-                var stop = timetable[j];
-                stop.splice(i1, 0, "|")
-                timetable[j] = stop;
-            }
-        } else {
-            for(var j = i; j < lastClick; j++) {
-                var stop = timetable[j];
-                stop.splice(i1, 0, "|")
-                timetable[j] = stop;
-            }
-        }
-        lastClick = -1;
-    } else {
-        var stop = timetable[i];
-        stop.splice(i1, 0, "|")
-        timetable[i] = stop;
-        lastClick = i;
-    }
-    printToTable();
-}
-
-function removeSpace(e ,i, i1) {
-    if(e.shiftKey && lastClick != -1) {
-        if(i >= lastClick) {
-            for(var j = lastClick; j < i; j++) {
-                var stop = timetable[j];
-                stop.splice(i1, 1)
-                timetable[j] = stop;
-            }
-        } else {
-            for(var j = i; j < lastClick; j++) {
-                var stop = timetable[j];
-                stop.splice(i1, 1)
-                timetable[j] = stop;
-            }
-        }
-        lastClick = -1;
-    } else {
-        var stop = timetable[i];
-        stop.splice(i1, 1)
-        timetable[i] = stop;
-        lastClick = i;
-    }
-    printToTable();
 }
 
 function actionAddSpaces() {
     let selStarti = Math.min(lastClicki, lastEndi);
     let selStartj = Math.min(lastClicki1, lastEndi1);
     let selEndi = Math.max(lastClicki, lastEndi);
-    let selEndj = Math.max(lastClicki, lastEndi1);
+    let selEndj = Math.max(lastClicki1, lastEndi1);
     for(let i = selStarti; i <= selEndi; i++) {
         let stop = timetable[i];
         for(let j = 0; j <= (selEndj-selStartj); j++) {
@@ -152,7 +171,7 @@ function actionRemoveSpaces() {
     let selStarti = Math.min(lastClicki, lastEndi);
     let selStartj = Math.min(lastClicki1, lastEndi1);
     let selEndi = Math.max(lastClicki, lastEndi);
-    let selEndj = Math.max(lastClicki, lastEndi1);
+    let selEndj = Math.max(lastClicki1, lastEndi1);
     for(let i = selStarti; i <= selEndi; i++) {
         let stop = timetable[i];
         for(let j = 0; j <= (selEndj-selStartj); j++) {
@@ -178,17 +197,17 @@ function printToTable(selStarti, selStarti1, selEndi, selEndi1) {
             let e1 = e[i1]
             if(i1 != 0) {
                 if(e1 != "|") {
-                    $("#timeTable").append("<td class='bolden' id='cell"+i+""+i1+"'>"+e1+"</tdclass>");
+                    $("#timeTable").append("<td class='bolden' id='cell"+i+"-"+i1+"'>"+e1+"</tdclass>");
                 } else {
-                    $("#timeTable").append("<td id='cell"+i+""+i1+"'>"+e1+"</td>");
+                    $("#timeTable").append("<td id='cell"+i+"-"+i1+"'>"+e1+"</td>");
                 }
-                if(i >= selStarti && i <= selEndi && i1 >= selStarti1 && i1 <= selEndi1) $("#cell" + i + "" + i1).addClass("orange");
-                $("#cell"+i+""+i1).on("click", function(e) {
+                if(i >= selStarti && i <= selEndi && i1 >= selStarti1 && i1 <= selEndi1) $("#cell" + i + "-" + i1).addClass("orange");
+                $("#cell"+i+"-"+i1).on("click", function(e) {
                     e.preventDefault();
                     if(e.shiftKey && lastClicki != -1) {
                         console.log("Shiftclick");
                         printToTable(Math.min(lastClicki,i), Math.min(lastClicki1,i1), Math.max(i,lastClicki), Math.max(i1,lastClicki1));
-                        let cell = $("#cell"+Math.min(lastClicki, i)+""+Math.max(lastClicki1, i1));
+                        let cell = $("#cell"+Math.min(lastClicki, i)+"-"+Math.max(lastClicki1, i1));
                         let pos = cell.offset();
                         pos.left += cell.width()+20;
                         $("#fl_menu").css(pos);
@@ -200,7 +219,7 @@ function printToTable(selStarti, selStarti1, selEndi, selEndi1) {
                         printToTable(i, i1, i, i1);
                         lastClicki = i;
                         lastClicki1 = i1;
-                        let cell = $("#cell"+Math.min(lastClicki, i)+""+Math.max(lastClicki1, i1));
+                        let cell = $("#cell"+Math.min(lastClicki, i)+"-"+Math.max(lastClicki1, i1));
                         let pos = cell.offset();
                         pos.left += cell.width()+20;
                         $("#fl_menu").css(pos);
@@ -211,7 +230,7 @@ function printToTable(selStarti, selStarti1, selEndi, selEndi1) {
 
                 }).disableSelection();
             } else {
-                $("#timeTable").append("<td>"+e1+"</td>");
+                $("#timeTable").append("<td class='bolden'>"+e1+"</td>");
             }
         }
         $("#timeTable").append("</tr>");

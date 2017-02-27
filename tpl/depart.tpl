@@ -8,20 +8,27 @@
                 <input id="line_no" type="text">
                 <label for="line_no">Linie</label>
             </div>
-            <div class="input-field col s2">
+            <div class="input-field col s1">
                 <select id="direction">
                     <option value="inbound" selected>-></option>
                     <option value="outbound"><-</option>
                 </select>
                 <label>Richtung</label>
             </div>
-            <div class="input-field col s2">
+            <div class="input-field col s1">
                 <select id="day">
                     <option value="MoFr" selected>Mo-Fr</option>
                     <option value="Sa">Sa</option>
                     <option value="So">So</option>
                 </select>
                 <label>Tag</label>
+            </div>
+            <div class="input-field col s2">
+                <select id="type">
+                    <option value="mvg" selected>Mainz - MVG</option>
+                    <option value="lvb">Leipzig - LVB</option>
+                </select>
+                <label>Fahrplantyp</label>
             </div>
             <div class="col s6 row">
                 <input id="fileInput" type="file" style="display:none;" onchange="load(event)"/>
@@ -99,5 +106,6 @@
         </div>
     </div>
 </main>
+<script type="text/javascript" src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
 <script src="js/depart.js"></script>
 {include file="end.tpl"}
