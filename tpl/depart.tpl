@@ -77,6 +77,10 @@
                         type="button">
                     <i class="mddi mddi-minus"></i>
                 </button>
+                <button id="btnAddSpacedSpace" class="btn orange waves-effect waves-light col s3" onclick="actionAddSpacedSpaces()"
+                        type="button">
+                    <i class="mddi mddi-debug-step-over"></i>
+                </button>
             </div>
             <button id="btnFillAll" class="btn orange waves-effect waves-light col s3" onclick="fillUpAll()"
                     type="button">

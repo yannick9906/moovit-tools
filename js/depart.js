@@ -12,6 +12,7 @@ let line = 0;
 let direction = "in";
 let day = "MoFr";
 let type = "mvg";
+let history = [];
 
 $(document).ready(function() {
     $.support.selectstart = "onselectstart" in document.createElement("div");
@@ -24,7 +25,27 @@ $(document).ready(function() {
     $("#tripTypes").hide();
     $("#intervalTypes").hide();
     $("select").material_select();
+
+    $(window).on("keyup", function(e) {
+        let evtobj = window.event? event : e
+        if (evtobj.keyCode == 90 && evtobj.ctrlKey) undoAction();
+    });
 });
+
+function takeSnapshot() {
+    if(history.length >= 20)
+        history.shift();
+    history.push(JSON.parse(JSON.stringify(timetable)));
+    console.log(timetable);
+    console.log("took snapshot");
+}
+
+function undoAction() {
+    timetable = history.pop();
+    if(timetable.length == 0) first = true;
+    console.log("Undo");
+    printToTable();
+}
 
 function updateInfo() {
     line = $("#line_no").val();
@@ -33,6 +54,7 @@ function updateInfo() {
 }
 
 function addPage() {
+    takeSnapshot();
     let newPage = $("#addPageInput").val();
     newPage = newPage.replace(/u¨/g, "ü");
     newPage = newPage.replace(/a¨/g, "ä");
@@ -149,6 +171,7 @@ function addPage() {
 }
 
 function actionAddSpaces() {
+    takeSnapshot();
     let selStarti = Math.min(lastClicki, lastEndi);
     let selStartj = Math.min(lastClicki1, lastEndi1);
     let selEndi = Math.max(lastClicki, lastEndi);
@@ -167,7 +190,28 @@ function actionAddSpaces() {
     printToTable();
 }
 
+function actionAddSpacedSpaces() {
+    takeSnapshot();
+    let selStarti = Math.min(lastClicki, lastEndi);
+    let selStartj = Math.min(lastClicki1, lastEndi1);
+    let selEndi = Math.max(lastClicki, lastEndi);
+    let selEndj = Math.max(lastClicki1, lastEndi1);
+    for(let i = selStarti; i <= selEndi; i++) {
+        let stop = timetable[i];
+        for(let j = 0; j <= (selEndj-selStartj); j++) {
+            stop.splice(selStartj+2*j, 0, "|")
+        }
+        timetable[i] = stop;
+    }
+    lastClicki = -1;
+    lastClicki1 = -1;
+    lastEndi = -1;
+    lastEndi1 = -1;
+    printToTable();
+}
+
 function actionRemoveSpaces() {
+    takeSnapshot();
     let selStarti = Math.min(lastClicki, lastEndi);
     let selStartj = Math.min(lastClicki1, lastEndi1);
     let selEndi = Math.max(lastClicki, lastEndi);
@@ -411,6 +455,7 @@ function fillUpRow(rowToFill) {
 }
 
 function fillUpAll() {
+    takeSnapshot();
     for(var i = 0; i < timetable.length;i++) {
         fillUpRow(i);
     }
@@ -424,6 +469,7 @@ function save() {
 }
 
 function load(event) {
+    takeSnapshot();
     var input = event.target;
 
     var reader = new FileReader();

@@ -165,34 +165,6 @@ function getStations() {
             });
             markers.push(thismarker);
             idToMarker[i+"h"] = e.id;
-
-            /*$.getJSON("api/stationlinks/getLinkForStation.php?id="+e.id,null, function(json) {
-                let list = json["links"];
-                list.forEach(function (e) {
-                    //Draw Polyline Preview
-                    let color = generateRandomColor();
-                    const path = JSON.parse(e.path);
-                    let latlngs = [];
-                    path.forEach(function(e) {
-                        latlngs.push([e.lat, e.lng]);
-                    });
-                    let line = L.polyline(latlngs,{
-                        color: color,
-                        opacity: 1
-
-                    });
-                    line.addTo(map);
-
-                    let decorator = L.polylineDecorator(line,{
-                        patterns: [
-                            {offset: 75, repeat: 75, symbol: L.Symbol.arrowHead({pixelSize:12, pathOptions:{color: color}})}
-                        ]
-                    });
-                    decorator.addTo(map);
-                    polylines.push(line);
-                    polylines.push(decorator);
-                });
-            });*/
         });
     });
 }
