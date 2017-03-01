@@ -233,6 +233,47 @@ function actionAddSpacedSpaces() {
     printToTable();
 }
 
+function actionAddSpaced21Spaces() {
+    takeSnapshot();
+    let selStarti = Math.min(lastClicki, lastEndi);
+    let selStartj = Math.min(lastClicki1, lastEndi1);
+    let selEndi = Math.max(lastClicki, lastEndi);
+    let selEndj = Math.max(lastClicki1, lastEndi1);
+    for(let i = selStarti; i <= selEndi; i++) {
+        let stop = timetable[i];
+        for(let j = 0; j <= (selEndj-selStartj)-((selEndj-selStartj)/2); j++) {
+            stop.splice(selStartj+3*j, 0, "|")
+        }
+        timetable[i] = stop;
+    }
+    lastClicki = -1;
+    lastClicki1 = -1;
+    lastEndi = -1;
+    lastEndi1 = -1;
+    printToTable();
+}
+
+function actionAddSpaced12Spaces() {
+    takeSnapshot();
+    let selStarti = Math.min(lastClicki, lastEndi);
+    let selStartj = Math.min(lastClicki1, lastEndi1);
+    let selEndi = Math.max(lastClicki, lastEndi);
+    let selEndj = Math.max(lastClicki1, lastEndi1);
+    for(let i = selStarti; i <= selEndi; i++) {
+        let stop = timetable[i];
+        for(let j = 0; j <= (selEndj-selStartj); j++) {
+            stop.splice(selStartj+3*j, 0, "|")
+            stop.splice(selStartj+3*j, 0, "|")
+        }
+        timetable[i] = stop;
+    }
+    lastClicki = -1;
+    lastClicki1 = -1;
+    lastEndi = -1;
+    lastEndi1 = -1;
+    printToTable();
+}
+
 function actionRemoveSpaces() {
     takeSnapshot();
     let selStarti = Math.min(lastClicki, lastEndi);

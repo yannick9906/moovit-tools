@@ -81,6 +81,14 @@
                         type="button">
                     <i class="mddi mddi-debug-step-over"></i>
                 </button>
+                <button id="btnAddSpacedSpace" class="btn orange waves-effect waves-light col s3" onclick="actionAddSpaced12Spaces()"
+                        type="button">
+                    1/2
+                </button>
+                <button id="btnAddSpacedSpace" class="btn orange waves-effect waves-light col s3" onclick="actionAddSpaced21Spaces()"
+                        type="button">
+                    2/1
+                </button>
             </div>
             <button id="btnFillAll" class="btn orange waves-effect waves-light col s3" onclick="fillUpAll()"
                     type="button">
