@@ -151,13 +151,34 @@ function addPage() {
                 let times = [];
                 for(let i1 = 0; i1 < splitted.length; i1++) {
                     let e1 = splitted[i1];
-                    if (e1.includes(".") && !e1.match(/[a-z]/i)) {
-                        times.push(e1);
-                    } else if(e1 == ".....") {
+                    if(e1.includes("Li.") || e1.includes("Gleis")) {
+                        i1++;
+                    } else if(e1.includes("SEV")) {
+
+                    } else if(e1 == "....." || e1 == "|") {
                         times.push("|");
+                        //console.log(e1+" =>Space");
+                    } else if (e1.includes(".") && !e1.match(/[a-z]/i) && !e1.includes("..") && !e1.includes("...")) {
+                        times.push(e1);
+                        //console.log(e1+" =>Time");
+                    } else if(e1.includes("Alle")) {
+                        try {
+                            if (/^\d+$/.test(splitted[i1 + 1])) {
+                                //Found repeat option in this row
+                                console.log("should copy times every " + splitted[i1 + 1] + "mins");
+                                i1++;
+                            } else if(/^\d+$/.test(newPageLines[i+1].split(" ")[i1])) {
+                                //Found repeat option in next row
+                                console.log("should copy times every " + newPageLines[i+1].split(" ")[i1] + "mins");
+                            } else {
+                                console.log(splitted[i1 + 1] + " => Nope")
+                            }
+                        } catch(e) {}
                     } else {
-                        if(!e1.includes(".."))
-                            name += " " + e1;
+                        e1 = e1.replace(/\./g, ""); //Filter points
+                        e1 = e1.replace(/Min/g,""); //Filter "Min"
+                        name += " " + e1;
+                        //console.log(e1 + " =>Name");
                     }
                 }
 
