@@ -59,6 +59,8 @@ function addPage() {
     newPage = newPage.replace(/u¨/g, "ü");
     newPage = newPage.replace(/a¨/g, "ä");
     newPage = newPage.replace(/o¨/g, "ö");
+    newPage = newPage.replace(//g, "");
+    newPage = newPage.replace(/ð/g, "");
     newPage = newPage.replace(/\n$/, "");
     let newPageLines = newPage.split("\n");
 
@@ -111,7 +113,7 @@ function addPage() {
                 let times = [];
                 for(let i1 = 0; i1 < splitted.length; i1++) {
                     let e1 = splitted[i1];
-                    if(e1 == ".....") {
+                    if(e1 == "....." || e1 == "|") {
                         times.push("|");
                         //console.log(e1+" =>Space");
                     } else if (e1.includes(".") && !e1.match(/[a-z]/i) && !e1.includes("..") && !e1.includes("...")) {

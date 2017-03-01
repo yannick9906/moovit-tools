@@ -18,7 +18,7 @@ const template = Handlebars.compile(infoWindowTempl);
 //// Line List Template
 const lineListTempl = `
 <tr onclick="editLine({{id}})" class="showHand">
-    <td><b>{{shortName}}:</b> {{longName}}</td><td><a onclick="removeLine({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
+    <td><i class="mddi mddi-{{icon}}"></i> <b>{{shortName}}:</b> {{longName}}</td><td><a onclick="removeLine({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
 </tr>
     `;
 const templateLines = Handlebars.compile(lineListTempl);
@@ -191,7 +191,9 @@ function loadLines() {
     $.getJSON("../api/lines/getList.php?sort=nameAsc&page=1",null,function(json) {
         $("#lineList").html("");
         json['lines'].forEach(function(e, i, a) {
-            $("#lineList").append(templateLines({id: e['id'], shortName: e['nameShort'], longName: e['nameLong']}))
+            let types = {'Bus':"bus",'Tram':"tram", 'Train':'train'};
+            let icon = types[e['type']]
+            $("#lineList").append(templateLines({icon: icon, id: e['id'], shortName: e['nameShort'], longName: e['nameLong']}))
         });
     });
 }
