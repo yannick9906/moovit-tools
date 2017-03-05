@@ -174,18 +174,17 @@
         /**
          * Creates a new station from the give attribs
          *
-         * @param $user User
          * @param $stationName
          * @param $stationCode
          * @param $lat
          * @param $lon
          */
-        public static function createStation($user, $stationName, $stationCode, $lat, $lon) {
+        public static function createStation($stationName, $stationCode, $lat, $lon) {
             $pdo = new PDO_MYSQL();
             $pdo->queryInsert("moovit_stations",
                 ["stationName" => utf8_decode($stationName),
                  "stationCode" => utf8_decode($stationCode),
-                 "prID" => $user->getProject()->getProjectID(),
+                 "prID" => $_SESSION["prID"],
                  "posLat" => $lat,
                  "posLon" => $lon]
             );

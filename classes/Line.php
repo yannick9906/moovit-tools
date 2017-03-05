@@ -159,17 +159,16 @@
         /**
          * Creates a new station from the give attribs
          *
-         * @param $user User
          * @param $lineShort string
          * @param $lineLong string
          * @param $type string
          */
-        public static function createLine($user, $lineShort, $lineLong, $type) {
+        public static function createLine($lineShort, $lineLong, $type) {
             $pdo = new PDO_MYSQL();
             $pdo->queryInsert("moovit_lines",
                 ["nameLong" => utf8_decode($lineLong),
                  "nameShort" => utf8_decode($lineShort),
-                 "prID" => $user->getProject()->getProjectID(),
+                 "prID" => $_SESSION["prID"],
                  "type" => $type]
             );
         }
