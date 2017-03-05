@@ -20,7 +20,8 @@ class Util {
     public static function checkSession() {
         session_start();
         if(!isset($_SESSION["uID"])) {
-            echo json_encode(["success" => false, "error" => "NoLogin"]);
+            self::forwardTo("login.php");
+            //echo json_encode(["success" => false, "error" => "NoLogin"]);
             exit;
         } else {
             $user = User::fromUID($_SESSION["uID"]);
