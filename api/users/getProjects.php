@@ -2,8 +2,8 @@
     /**
      * Created by PhpStorm.
      * User: yanni
-     * Date: 2017-02-25
-     * Time: 12:35 AM
+     * Date: 2017-03-05
+     * Time: 02:49 PM
      */
 
     ini_set("display_errors", "on");
@@ -17,4 +17,6 @@
     $user = \moovit\Util::checkSession();
     $pdo = new \moovit\PDO_MYSQL();
 
-    echo json_encode(\moovit\Project::fromPrID($_SESSION["prID"])->getCenter());
+    $projects = \moovit\Project::fromPrIDList($user->getProjects());
+
+    echo json_encode(["active" => $_SESSION["prID"], "projects" => $projects]);

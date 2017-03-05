@@ -71,8 +71,19 @@
         }
 
         public function getProject() {
-            $res = $this->pdo->query("SELECT * FROM `moovit_user-project` WHERE uID = :uid", [":uid" => $this->uID]);
+            $res = $this->pdo->query("SELECT * FROM `moovit_user-project` WHERE uID = :uid LIMIT 1", [":uid" => $this->uID]);
             return Project::fromPrID($res->prID);
+        }
+
+        public function getProjects() {
+            $stmt = $this->pdo->queryMulti("SELECT * FROM `moovit_user-project` WHERE uID = :uid", [":uid" => $this->uID]);
+
+            $hits = [];
+            while($row = $stmt->fetchObject()) {
+                array_push($hits, $row->prID);
+            }
+
+            return $hits;
         }
 
 

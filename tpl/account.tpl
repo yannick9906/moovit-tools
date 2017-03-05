@@ -9,7 +9,15 @@
                 Versuche es in 42 Minuten erneut.<br/><br/>
             </i>
         </div>
+        <div class="card-panel col s12 row">
+            <div class="input-field col s4">
+                <select id="selActProj">
+                    <option value="" disabled selected>Projekte</option>
+                </select>
+                <label>Aktives Projekt</label>
+            </div>
+        </div>
     </div>
 </main>
-<script src="js/depart.js"></script>
+<script src="js/account.js"></script>
 {include file="end.tpl"}

@@ -74,7 +74,7 @@ class Util {
                 "undoUrl" => $undoUrl,
                 "backable" => $backable ? 1:0,
                 "highlight" => $highlight,
-                "projectname" => $user->getProject()->getProjectName()
+                "projectname" => Project::fromPrID($_SESSION["prID"])->getProjectName()
             ],
             "page" => []
         ];

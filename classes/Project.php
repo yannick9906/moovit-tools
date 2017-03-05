@@ -9,7 +9,7 @@
     namespace moovit;
 
 
-    class Project {
+    class Project implements \JsonSerializable {
         private $pdo, $projectID, $projectName, $lineCount, $tripCount, $stopCount, $linkCount, $center_lat, $center_lng;
 
         /**
@@ -24,10 +24,10 @@
             $this->projectID = $projectID;
             $this->projectName = $projectName;
             $this->pdo = new PDO_MYSQL();
-            $this->lineCount = $this->pdo->query("select count(*) as count from moovit_lines where prID = :prID", [":prID" => $projectID])->count;
-            $this->tripCount = $this->pdo->query("select count(*) as count from moovit_tripTypes where lID in(select lID from moovit_lines where prID = :prID)", [":prID" => $projectID])->count;
-            $this->stopCount = $this->pdo->query("select count(*) as count from moovit_stations where prID = :prID", [":prID" => $projectID])->count;
-            $this->linkCount = $this->pdo->query("select count(*) as count from moovit_stationLnks where startStationID in(select stID from moovit_stations where prID = :prID)", [":prID" => $projectID])->count;
+            $this->lineCount = $this->pdo->query("SELECT count(*) AS count FROM moovit_lines WHERE prID = :prID", [":prID" => $projectID])->count;
+            $this->tripCount = $this->pdo->query("SELECT count(*) AS count FROM moovit_tripTypes WHERE lID IN(SELECT lID FROM moovit_lines WHERE prID = :prID)", [":prID" => $projectID])->count;
+            $this->stopCount = $this->pdo->query("SELECT count(*) AS count FROM moovit_stations WHERE prID = :prID", [":prID" => $projectID])->count;
+            $this->linkCount = $this->pdo->query("SELECT count(*) AS count FROM moovit_stationLnks WHERE startStationID IN(SELECT stID FROM moovit_stations WHERE prID = :prID)", [":prID" => $projectID])->count;
             $this->center_lat = $center_lat;
             $this->center_lng = $center_lng;
         }
@@ -38,10 +38,18 @@
             return new Project($prID, $res->projectName, $res->center_lat, $res->center_lng);
         }
 
+        public static function fromPrIDList($list) {
+            $projects = [];
+            foreach ($list as $prID) {
+                array_push($projects, self::fromPrID($prID));
+            }
+            return $projects;
+        }
+
         public function asArray() {
             return [
-                "id" => $this->projectID,
-                "name" => $this->projectName,
+                "id"        => $this->projectID,
+                "name"      => $this->projectName,
                 "lineCount" => $this->lineCount,
                 "tripCount" => $this->tripCount,
                 "stopCount" => $this->stopCount,
@@ -50,7 +58,7 @@
         }
 
         public function getCenter() {
-            return ["lat" => $this->center_lat,"lng" => $this->center_lng];
+            return ["lat" => $this->center_lat, "lng" => $this->center_lng];
         }
 
         /**
@@ -79,5 +87,17 @@
          */
         public function setProjectName($projectName) {
             $this->projectName = $projectName;
+        }
+
+        /**
+         * Specify data which should be serialized to JSON
+         *
+         * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
+         * @return mixed data which can be serialized by <b>json_encode</b>,
+         *        which is a value of any type other than a resource.
+         * @since 5.4.0
+         */
+        function jsonSerialize() {
+            return $this->asArray();
         }
     }
