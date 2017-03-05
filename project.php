@@ -18,5 +18,5 @@
     $dwoo = new Dwoo\Core();
 
     $pgdata = \moovit\Util::getEditorPageDataStub("Projekt", $user, "project");
-    $pgdata["page"]["project"] = $user->getProject()->asArray();
+    $pgdata["page"]["project"] = \moovit\Project::fromPrID($_SESSION["prID"])->asArray();
     $dwoo->output("tpl/project.tpl", $pgdata);
