@@ -25,4 +25,5 @@
     if($lineShort != "" && $lineLong != "") {
         \moovit\Line::createLine($user, $lineShort, $lineLong, $type);
         echo json_encode(["success" => "1"]);
+        $user->addAction(2);
     } else  echo json_encode(["success" => "0", "error" => "missing fields"]);

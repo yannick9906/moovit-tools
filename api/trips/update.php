@@ -28,4 +28,6 @@
         if($path != "") $trip->setStationLnks($path);
         $trip->saveChanges();
         echo json_encode(["success" => "1"]);
+        if($path != "") $user->addAction(2);
+        else $user->addAction(1);
     } else echo json_encode(["success" => "0", "error" => "missing fields"]);

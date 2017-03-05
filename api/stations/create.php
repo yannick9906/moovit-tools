@@ -25,4 +25,5 @@
     if($stationName != "" && $stationCode != "" && $posLat != "" && $posLon != "") {
         \moovit\Station::createStation($user, $stationName, $stationCode, $posLat, $posLon);
         echo json_encode(["success" => "1"]);
+        $user->addAction(1);
     } else  echo json_encode(["success" => "0", "error" => "missing fields"]);

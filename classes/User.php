@@ -12,21 +12,23 @@
     use moovit;
 
     class User {
-        private $pdo, $uID, $uName, $uRealname, $uPassHash;
+        private $pdo, $uID, $uName, $uRealname, $uPassHash, $points;
 
         /**
          * User constructor.
          *
-         * @param int $uID
+         * @param int    $uID
          * @param string $uName
          * @param string $uRealname
          * @param string $uPassHash
+         * @param int    $points
          */
-        public function __construct($uID, $uName, $uRealname, $uPassHash) {
+        public function __construct($uID, $uName, $uRealname, $uPassHash, $points) {
             $this->uID = $uID;
             $this->uName = utf8_encode($uName);
             $this->uRealname = utf8_encode($uRealname);
             $this->uPassHash = $uPassHash;
+            $this->points = $points;
             $this->pdo = new PDO_MYSQL();
         }
 
@@ -39,7 +41,7 @@
         public static function fromUID($uID) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM moovit_user WHERE uID = :uid", [":uid" => $uID]);
-            return new User($res->uID, $res->username, $res->realname, $res->passhash);
+            return new User($res->uID, $res->username, $res->realname, $res->passhash, $res->points);
         }
         
         /**
@@ -51,7 +53,7 @@
         public static function fromUName($uName) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM moovit_user WHERE username = :uname", [":uname" => $uName]);
-            return new User($res->uID, $res->username, $res->realname, $res->passhash);
+            return new User($res->uID, $res->username, $res->realname, $res->passhash, $res->points);
         }
 
         /**
@@ -96,7 +98,8 @@
             return [
                 "uID" => $this->uID,
                 "username" => $this->uName,
-                "realname" => $this->uRealname
+                "realname" => $this->uRealname,
+                "points" => $this->points
             ];
         }
 
@@ -218,7 +221,8 @@
             $this->pdo->queryUpdate("moovit_user",
                 ["username" => utf8_decode($this->uName),
                 "realname" => utf8_decode($this->uRealname),
-                "passhash" => $this->uPassHash],
+                "passhash" => $this->uPassHash,
+                "points" => $this->points],
                 "uID = :uid",
                 ["uid" => $this->uID]
             );
@@ -296,7 +300,28 @@
             $this->uPassHash = $uPassHash;
         }
 
+        /**
+         * @param string $passHash
+         * @return bool
+         */
         public function comparePassHash($passHash) {
             return $this->uPassHash == $passHash;
+        }
+
+        /**
+         * @return int
+         */
+        public function getPoints() {
+            return $this->points;
+        }
+
+        /**
+         * Adds value onto points and saves this object.
+         *
+         * @param int $value
+         */
+        public function addAction($value) {
+            $this->points += $value;
+            $this->saveChanges();
         }
     }

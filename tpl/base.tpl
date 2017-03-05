@@ -45,7 +45,7 @@
                 <li><div class="userView">
                         <img class="background" src="css/mvg.jpg" width="300px" style="margin-top: -56px">
                         <a href="#!"><div class="circle red center white-text" style="font-size: 40px; line-height: 65px;">{$args.usrchar}</div></a>
-                        <a href="#!"><span class="white-text name" style="text-shadow: 1px 1px 5px black;">{$args.realname}</span></a>
+                        <a href="#!"><span class="white-text name" style="text-shadow: 1px 1px 5px black;">{$args.realname} - {$args.points} Punkte</span></a>
                         <a href="#!"><span class="white-text email" style="text-shadow: 1px 1px 5px black;" id="projectname">{$args.projectname}</span></a>
                     </div></li>
                 <li id="nav-account"><a href="account.php"><i class="material-icons">person</i>Account</a></li>

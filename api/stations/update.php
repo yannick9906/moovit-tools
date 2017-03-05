@@ -33,4 +33,5 @@
         $station->setPosLon($posLon);
         $station->saveChanges();
         echo json_encode(["success" => "1"]);
+        $user->addAction(1);
     } else echo json_encode(["success" => "0", "error" => "missing fields"]);

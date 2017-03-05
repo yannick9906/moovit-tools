@@ -24,4 +24,5 @@
         $link->setPath($path);
         $link->saveChanges();
         echo json_encode(["success" => "1"]);
+        $user->addAction(2);
     } else echo json_encode(["success" => "0", "error" => "missing fields"]);

@@ -25,4 +25,5 @@
     if($tripName != "" && $tripDirection != "" && $lID != "") {
         \moovit\TripType::createTrip($tripName, $lID, $tripDirection);
         echo json_encode(["success" => "1", "id" => \moovit\TripType::getLastID()]);
+        $user->addAction(1);
     } else  echo json_encode(["success" => "0", "error" => "missing fields"]);

@@ -54,12 +54,12 @@ class Util {
     }
 
     /**
-     * @param string     $title
+     * @param string       $title
      * @param \moovit\User $user
-     * @param string     $highlight
-     * @param bool       $backable
-     * @param bool       $editor
-     * @param string     $undoUrl
+     * @param string       $highlight
+     * @param bool         $backable
+     * @param bool         $editor
+     * @param string       $undoUrl
      * @return array
      */
     public static function getEditorPageDataStub($title, $user, $highlight, $backable = false, $editor = false, $undoUrl = "") {
@@ -74,7 +74,8 @@ class Util {
                 "undoUrl" => $undoUrl,
                 "backable" => $backable ? 1:0,
                 "highlight" => $highlight,
-                "projectname" => Project::fromPrID($_SESSION["prID"])->getProjectName()
+                "projectname" => Project::fromPrID($_SESSION["prID"])->getProjectName(),
+                "points" => $user->getPoints()
             ],
             "page" => []
         ];
