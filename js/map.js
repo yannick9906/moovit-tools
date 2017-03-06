@@ -294,6 +294,20 @@ function submitEditStation() {
     });
 }
 
+function removeStation() {
+    $.post("api/stations/remove.php?id=" + currEdit, null, function (response) {
+        let json = JSON.parse(response);
+        if (json.success == "1") {
+            Materialize.toast("Haltestelle gelöscht", 2000, "green");
+            hideAll(1);
+        } else {
+            if(json.error == "in_use") {
+                Materialize.toast("Bitte zuvor alle StationLinks löschen", 2000, "red");
+            }
+        }
+    });
+}
+
 ////////////////////////////////////////////////////////////////////
 // Station Links ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////

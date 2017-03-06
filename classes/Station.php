@@ -224,6 +224,13 @@
             );
         }
 
+        public function remove() {
+            if(sizeof(StationLnk::getStationLinksForStation($this)["links"])==0) {
+                $this->pdo->query("delete from moovit_stations where stID = :stID", [":stID" => $this->stationID]);
+                return true;
+            } else return false;
+        }
+
         /**
          * @return mixed
          */

@@ -65,6 +65,7 @@
             </div>
             <a class="waves-effect waves-light btn orange right" onclick="submitEditStation();">OK</a>
             <a class="waves-effect waves-red btn-flat right" onclick="hideAll(1);">abbrechen</a>
+            <a class="waves-effect waves-red btn-flat right red-text" onclick="removeStation();">LÖSCHEN</a>
         </div>
         <div id="stationlnkspanel" class="row">
             <div class="col s12 bolden orange-text text-darken-4">
