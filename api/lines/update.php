@@ -23,7 +23,7 @@
     $lineShort = $_POST["nameShort"];
     $type = intval($_POST["type"]);
 
-    if($lineLong != "" && $lineShort != "" && $type != "") {
+    if($lineLong != "" && $lineShort != "" && ($type != null || $type == 0)) {
         $line->setLineLong($lineLong);
         $line->setLineShort($lineShort);
         $line->setType($type);
