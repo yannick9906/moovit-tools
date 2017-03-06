@@ -1,8 +1,8 @@
 <footer class="page-footer orange" style="position: fixed; bottom: 0;z-index: 100;">
     <div class="footer-copyright">
         <div class="container">
-            ©2016 Yannick Félix
-            <span class="grey-text text-lighten-4 right">Moovit Tool v1.0a</span>
+            ©2016-2017 Yannick Félix
+            <span class="grey-text text-lighten-4 right">Moovit Tool v1.2a</span>
         </div>
     </div>
 </footer>

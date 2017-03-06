@@ -124,7 +124,7 @@
          */
         public static function doesUserNameExist($uName) {
             $pdo = new PDO_MYSQL();
-            $res = $pdo->query("SELECT * FROM moovit_user WHERE username = :uname", [":uname" => $uName]);
+            $res = $pdo->query("SELECT * FROM moovit_user WHERE lower(username) = lower(:uname)", [":uname" => $uName]);
             return isset($res->uID);
         }
 
