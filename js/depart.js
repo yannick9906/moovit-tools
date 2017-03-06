@@ -27,7 +27,7 @@ $(document).ready(function() {
     $("select").material_select();
 
     $(window).on("keyup", function(e) {
-        let evtobj = window.event? event : e
+        let evtobj = window.event? event : e;
         if (evtobj.keyCode == 90 && evtobj.ctrlKey) undoAction();
     });
 });
@@ -242,7 +242,7 @@ function actionAddSpaced21Spaces() {
     for(let i = selStarti; i <= selEndi; i++) {
         let stop = timetable[i];
         for(let j = 0; j <= (selEndj-selStartj)-((selEndj-selStartj)/2); j++) {
-            stop.splice(selStartj+3*j, 0, "|")
+            stop.splice(selStartj+3*j, 0, "|");
         }
         timetable[i] = stop;
     }
@@ -262,8 +262,8 @@ function actionAddSpaced12Spaces() {
     for(let i = selStarti; i <= selEndi; i++) {
         let stop = timetable[i];
         for(let j = 0; j <= (selEndj-selStartj); j++) {
-            stop.splice(selStartj+3*j, 0, "|")
-            stop.splice(selStartj+3*j, 0, "|")
+            stop.splice(selStartj+3*j, 0, "|");
+            stop.splice(selStartj+3*j, 0, "|");
         }
         timetable[i] = stop;
     }
@@ -283,7 +283,7 @@ function actionRemoveSpaces() {
     for(let i = selStarti; i <= selEndi; i++) {
         let stop = timetable[i];
         for(let j = 0; j <= (selEndj-selStartj); j++) {
-            stop.splice(selStartj, 1)
+            stop.splice(selStartj, 1);
         }
         timetable[i] = stop;
     }
@@ -302,7 +302,7 @@ function printToTable(selStarti, selStarti1, selEndi, selEndi1) {
         let e = timetable[i];
         $("#timeTable").append("<tr>");
         for(let i1 = 0; i1 < e.length; i1++) {
-            let e1 = e[i1]
+            let e1 = e[i1];
             if(i1 != 0) {
                 if(e1 != "|") {
                     $("#timeTable").append("<td class='bolden' id='cell"+i+"-"+i1+"'>"+e1+"</tdclass>");
@@ -346,10 +346,10 @@ function printToTable(selStarti, selStarti1, selEndi, selEndi1) {
 }
 
 function calcTripTypes() {
-    var tripTypes = [];
-    for(var i = 1; i < biggestArraySize(); i++) {
-        var type = []
-        for(var j = 0; j < timetable.length; j++) {
+    let tripTypes = [];
+    for(let i = 1; i < biggestArraySize(); i++) {
+        let type = [];
+        for(let j = 0; j < timetable.length; j++) {
             if(timetable[j][i] != "|") {
                 type.push(j);
             }
@@ -358,12 +358,9 @@ function calcTripTypes() {
     }
     console.log(tripTypes);
 
-    var uniqueTripTypes = deleteDuplicates(tripTypes);
-
-    trips = uniqueTripTypes;
+    trips = deleteDuplicates(tripTypes);
 
     $("#times").hide();
-    //$("#options").hide();
     $("#tripTypes").show();
 
     printTripTypes()
@@ -376,10 +373,10 @@ function backToTable() {
 }
 
 function deleteDuplicates(A) {
-    var hash = {};
-    var out = [];
-    for (var i = 0, l = A.length; i < l; i++) {
-        var key = A[i].join('|');
+    let hash = {};
+    let out = [];
+    for (let i = 0, l = A.length; i < l; i++) {
+        let key = A[i].join('|');
         if (!hash[key]) {
             out.push(A[i]);
             hash[key] = 'found';
@@ -390,15 +387,15 @@ function deleteDuplicates(A) {
 
 function printTripTypes() {
     $("#types").html("");
-    for(var i = 0; i < trips.length; i++) {
-        var startStation = timetable[trips[i][0]][0];
-        var endStation = timetable[trips[i][trips[i].length - 1]][0];
+    for(let i = 0; i < trips.length; i++) {
+        let startStation = timetable[trips[i][0]][0];
+        let endStation = timetable[trips[i][trips[i].length - 1]][0];
         $("#types").append("<button id='btnBack' class='btn orange waves-effect waves-light col s3' onclick='showIntervals("+i+")' type='button'>Intervalle</button>"+startStation+" -> "+endStation+"<br/>")
     }
 }
 
 function biggestArraySize() {
-    var size = 0;
+    let size = 0;
     for(let i = 0; i < timetable.length; i++) {
         if(timetable[i].length > size) {
             size = timetable[i].length;
@@ -408,10 +405,10 @@ function biggestArraySize() {
 }
 
 function showIntervals(interval) {
-    var tripTypes = [];
-    for(var i = 1; i < biggestArraySize(); i++) {
-        var type = []
-        for(var j = 0; j < timetable.length; j++) {
+    let tripTypes = [];
+    for(let i = 1; i < biggestArraySize(); i++) {
+        let type = [];
+        for(let j = 0; j < timetable.length; j++) {
             if(timetable[j][i] != "|") {
                 type.push(j);
             }
@@ -419,12 +416,12 @@ function showIntervals(interval) {
         tripTypes.push(type);
     }
 
-    var intervalToCheck = JSON.stringify(trips[interval]);
-    var tripTimes = [];
-    for(var i = 0; i < tripTypes.length; i++) {
+    let intervalToCheck = JSON.stringify(trips[interval]);
+    let tripTimes = [];
+    for(let i = 0; i < tripTypes.length; i++) {
         if(JSON.stringify(tripTypes[i]) == intervalToCheck) {
-            var thisTrip = []
-            for(var j = 0; j < timetable.length; j++) {
+            let thisTrip = [];
+            for(let j = 0; j < timetable.length; j++) {
                 if(timetable[j][i+1] != "|") {
                     thisTrip.push(timetable[j][i+1]);
                 }
@@ -433,21 +430,21 @@ function showIntervals(interval) {
         }
     }
 
-    var intervals = [];
-    tripTimes.forEach(function(trip, i, a) {
+    let intervals = [];
+    tripTimes.forEach(function(trip, i) {
         intervals[i] = createIntervalString(trip);
     });
 
-    var uniqueIntervals = intervals.filter(function(item, pos) {
+    let uniqueIntervals = intervals.filter(function(item, pos) {
         return intervals.indexOf(item) == pos;
     });
 
-    var output = "";
-    uniqueIntervals.forEach(function(elem, i, a) {
+    let output = "";
+    uniqueIntervals.forEach(function(elem, i) {
         output += "["+i+"]: " + elem + "\n";
     });
-    var startStation = timetable[trips[interval][0]][0];
-    var endStation = timetable[trips[interval][trips[interval].length - 1]][0];
+    let startStation = timetable[trips[interval][0]][0];
+    let endStation = timetable[trips[interval][trips[interval].length - 1]][0];
     updateInfo();
     output = "Intervalle fuer: "+startStation+" -> "+endStation+"\n\n"+output;
     output = "Linie "+line+" "+direction+" "+day+" \n\n"+output;
@@ -455,9 +452,9 @@ function showIntervals(interval) {
 
     output = "";
 
-    uniqueIntervals.forEach(function(interval, i, a) {
+    uniqueIntervals.forEach(function(interval, i) {
         output += i+"("+getIntervalTime(interval)+"m): ";
-        tripTimes.forEach(function(trip, j, sa) {
+        tripTimes.forEach(function(trip, j) {
             if(intervals[j] == interval) {
                 output += trip[0] + "; ";
             }
@@ -465,7 +462,7 @@ function showIntervals(interval) {
         output += "\n";
     });
     output = "Intervall Zeiten\n\n"+output;
-    output = output.split(".").join(":")
+    output = output.split(".").join(":");
     $("#intervalTimes").html(output);
     $("#tripTypes").hide();
     $("#intervalTypes").show();
@@ -477,9 +474,9 @@ function backToTrips() {
 }
 
 function getIntervalTime(string) {
-    var times = string.split(", ");
-    var time = 0;
-    times.forEach(function(e, i, a) {
+    let times = string.split(", ");
+    let time = 0;
+    times.forEach(function(e) {
         if(parseInt(e) <= 200)
             time += parseInt(e);
     });
@@ -487,13 +484,13 @@ function getIntervalTime(string) {
 }
 
 function createIntervalString(timeArray) {
-    var string = "";
-    var preTime = 0;
-    timeArray.forEach(function(elem, i, a) {
+    let string = "";
+    let preTime = 0;
+    timeArray.forEach(function(elem) {
         if(preTime != 0) {
-            var hrsmin = elem.split(".");
-            var thistime = parseInt(hrsmin[0])*60 + parseInt(hrsmin[1]);
-            var interval = thistime-preTime;
+            let hrsmin = elem.split(".");
+            let thistime = parseInt(hrsmin[0])*60 + parseInt(hrsmin[1]);
+            let interval = thistime-preTime;
             if(interval < 0) {
                 thistime += 1440;
                 interval = thistime-preTime;
@@ -501,18 +498,17 @@ function createIntervalString(timeArray) {
             preTime = thistime;
             string += interval + ", "
         } else {
-            var hrsmin = elem.split(".");
-            thistime = parseInt(hrsmin[0])*60 + parseInt(hrsmin[1]);
-            preTime = thistime;
+            let hrsmin = elem.split(".");
+            preTime = parseInt(hrsmin[0]) * 60 + parseInt(hrsmin[1]);
         }
     });
     return string;
 }
 
 function fillUpRow(rowToFill) {
-    var until = biggestArraySize();
-    var row = timetable[rowToFill];
-    for(var i = row.length; i < until; i++) {
+    let until = biggestArraySize();
+    let row = timetable[rowToFill];
+    for(let i = row.length; i < until; i++) {
         timetable[rowToFill].push("|")
     }
     printToTable()
@@ -520,34 +516,34 @@ function fillUpRow(rowToFill) {
 
 function fillUpAll() {
     takeSnapshot();
-    for(var i = 0; i < timetable.length;i++) {
+    for(let i = 0; i < timetable.length;i++) {
         fillUpRow(i);
     }
 }
 
 function save() {
     updateInfo();
-    var tosave = JSON.stringify(timetable);
-    var blob = new Blob([tosave], {type: "text/plain;charset=utf-8"});
+    let tosave = JSON.stringify(timetable);
+    let blob = new Blob([tosave], {type: "text/plain;charset=utf-8"});
     saveAs(blob, "line"+line+"-"+direction+"-"+day+".json");
 }
 
 function load(event) {
     takeSnapshot();
-    var input = event.target;
+    let input = event.target;
 
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = function(file){
         timetable = JSON.parse(reader.result);
         printToTable();
         first = false;
     };
     reader.readAsText(input.files[0]);
-    var filename = input.files[0].name;
+    let filename = input.files[0].name;
     console.log(filename);
 
-    var split1 = filename.split(".");
-    var split2 = split1[0].split("-");
+    let split1 = filename.split(".");
+    let split2 = split1[0].split("-");
     $("#line_no").val(split2[0].replace("line",""));
     $("#direction").val(split2[1]);
     $("#day").val(split2[2]);
@@ -556,12 +552,12 @@ function load(event) {
 }
 
 function togglePage() {
-    let addPage = $("#addPage")
+    let addPage = $("#addPage");
     if(addPage.is(":visible")) {
         addPage.hide();
-        $("#btnTogglePage").html("<i class=\"mddi mddi-plus-box\"></i> open")
+        $("#btnTogglePage").html("<i class=\"mddi mddi-plus-box\"></i> open");
     } else {
         addPage.show();
-        $("#btnTogglePage").html("<i class=\"mddi mddi-minus-box\"></i> close")
+        $("#btnTogglePage").html("<i class=\"mddi mddi-minus-box\"></i> close");
     }
 }

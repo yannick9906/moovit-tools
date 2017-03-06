@@ -2,8 +2,8 @@
     /**
      * Created by PhpStorm.
      * User: yanni
-     * Date: 04.10.2016
-     * Time: 22:36
+     * Date: 2017-03-06
+     * Time: 05:52 PM
      */
 
     ini_set("display_errors", "on");
@@ -22,10 +22,13 @@
     $stationCode = $_POST["stationCode"];
     $posLat = $_POST["lat"];
     $posLon = $_POST["lon"];
-    if($stationCode == "") $stationCode = " ";
+    if($stationCode == null) $stationCode = " ";
 
     if($stationName != "" && $posLat != "" && $posLon != "") {
-        \moovit\Station::createStation($stationName, $stationCode, $posLat, $posLon);
-        echo json_encode(["success" => "1"]);
-        $user->addAction(1);
+        $station = \moovit\Station::checkStation($stationName, $stationCode);
+        if($station != null && $station->isInRange($posLat, $posLon)) {
+            echo json_encode(["success" => "1", "found" => "1"]);
+        } else {
+            echo json_encode(["success" => "1", "found" => "0"]);
+        }
     } else  echo json_encode(["success" => "0", "error" => "missing fields"]);

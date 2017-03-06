@@ -39,6 +39,9 @@ let currMarkerPos = -1;
 let currEditLink = -1;
 let lastMove = new Date().getTime();
 
+let progress = 0;
+let progressTotal = 100;
+
 ////////////////////////////////////////////////////////////////////
 // Map Init ////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -188,7 +191,6 @@ function hideAll(x) {
     $("#stationlnkeditpanel").hide();
     $("#stationlnknewpanel").hide();
     $("#importStations").hide();
-    $("#importStationsStart").hide();
     $("#editortipspanel").hide();
     if(x == 1) $("#editortipspanel").show();
 }
@@ -491,11 +493,11 @@ function importStationsStart() {
 }
 
 function showCoordinates() {
-    /*var biggerLat = importRectangle.getBounds().getNorthEast().lat();
-    var biggerLng = importRectangle.getBounds().getNorthEast().lng();
-    var smallerLat = importRectangle.getBounds().getSouthWest().lat();
-    var smallerLng = importRectangle.getBounds().getSouthWest().lng();
-    var data = [
+    /*let biggerLat = importRectangle.getBounds().getNorthEast().lat();
+    let biggerLng = importRectangle.getBounds().getNorthEast().lng();
+    let smallerLat = importRectangle.getBounds().getSouthWest().lat();
+    let smallerLng = importRectangle.getBounds().getSouthWest().lng();
+    let data = [
         1,
         "getStopsInRegion",
         1,
@@ -519,8 +521,102 @@ function showCoordinates() {
     $("#coordinates").html(JSON.stringify(data));*/
 }
 
-function importStations() {
-    let data = $("#stops").val();
-    data = JSON.parse(data);
-    let stops = data[4]["0"]["lst"];
+function csvTojs(csv) {
+    let lines=csv.split("\n");
+    let result = [];
+    let headers = lines[0].split(",");
+
+    for(let i=1; i<lines.length; i++) {
+        let obj = {};
+
+        let row = lines[i],
+            queryIdx = 0,
+            startValueIdx = 0,
+            idx = 0;
+
+        if (row.trim() === '') { continue; }
+
+        while (idx < row.length) {
+            /* if we meet a double quote we skip until the next one */
+            let c = row[idx];
+
+            if (c === '"') {
+                do { c = row[++idx]; } while (c !== '"' && idx < row.length - 1);
+            }
+
+            if (c === ',' || /* handle end of line with no comma */ idx === row.length - 1) {
+                /* we've got a value */
+                let value = row.substr(startValueIdx, idx - startValueIdx).trim();
+
+                /* skip first double quote */
+                if (value[0] === '"') { value = value.substr(1); }
+                /* skip last comma */
+                if (value[value.length - 1] === ',') { value = value.substr(0, value.length - 1); }
+                /* skip last double quote */
+                if (value[value.length - 1] === '"') { value = value.substr(0, value.length - 1); }
+
+                let key = headers[queryIdx++];
+                obj[key] = value;
+                startValueIdx = idx + 1;
+            }
+
+            ++idx;
+        }
+
+        result.push(obj);
+    }
+    return result;
+}
+
+function updateProgress(add) {
+    progress += add;
+    $("#stationImportProgress").css('width', ((progress/progressTotal)*100)+'%');
+}
+
+function importStations(event) {
+    $("#editortipspanel").hide();
+    $("#importStations").show();
+    let input = event.target;
+
+    let reader = new FileReader();
+    reader.onload = function(file){
+        let stations = csvTojs(reader.result);
+
+        progress = 0;
+        progressTotal = stations.length;
+        updateProgress(0);
+
+        for(let i = 0; i < stations.length; i++) {
+            $("#stationImportList").append("<i class='mddi mddi-clock yellow-text' id='state"+i+"'></i> <span class='bolden'>"+stations[i]['STOP_NAME']+" "+stations[i]['STOP_CODE']+"</span><br/>")
+            $.post("api/stations/checkForStation.php",{stationName: stations[i]['STOP_NAME'], stationCode: stations[i]['STOP_CODE'], lat: stations[i]['STOP_LAT'], lon: stations[i]['STOP_LON']}, function(data) {
+                let json = JSON.parse(data);
+                if(json.success == 1) {
+                    if(json.found == 1) {
+                        updateProgress(1);
+                        $("#state"+i).removeClass("mddi-close").removeClass("yellow-text").addClass("mddi-check").addClass("green-text");
+                    } else {
+                        data = {
+                            stationName: stations[i]['STOP_NAME'],
+                            stationCode: stations[i]['STOP_CODE'],
+                            lat: stations[i]['STOP_LAT'],
+                            lon: stations[i]['STOP_LON']
+                        };
+                        $.post("../api/stations/create.php", data, function(response) {
+                            let json = JSON.parse(response);
+                            if(json.success == "1") {
+                                updateProgress(1);
+                                $("#state"+i).removeClass("mddi-close").removeClass("yellow-text").addClass("mddi-plus").addClass("green-text");
+                            } else {
+                                if(json.error == "missing fields") Materialize.toast("Bitte alle Felder ausfüllen", 2000, "red");
+                            }
+                        });
+                   }
+                } else {
+                    updateProgress(1);
+                    $("#state"+i).removeClass("mddi-close").removeClass("yellow-text").addClass("mddi-alert-box").addClass("red-text");
+                }
+            });
+        }
+    };
+    reader.readAsText(input.files[0]);
 }

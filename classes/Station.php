@@ -42,6 +42,40 @@
             return new Station($res->stID, $res->stationName, $res->posLat, $res->posLon, $res->stationCode);
         }
 
+        public static function checkStation($name, $code) {
+            $pdo = new PDO_MYSQL();
+            $res = $pdo->query("select * from moovit_stations where lower(concat(stationName,' ',stationCode)) = lower(:name)",[":name" => utf8_decode($name." ".$code)]);
+            if($res->stID != null)
+                return new Station($res->stID, $res->stationName, $res->posLat, $res->posLon, $res->stationCode);
+            else
+                return null;
+        }
+
+        private function distanceGeoPoints($lat1, $lng1, $lat2, $lng2) {
+
+            $earthRadius = 3958.75;
+
+            $dLat = deg2rad($lat2-$lat1);
+            $dLng = deg2rad($lng2-$lng1);
+
+
+            $a = sin($dLat/2) * sin($dLat/2) +
+                cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+                sin($dLng/2) * sin($dLng/2);
+            $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+            $dist = $earthRadius * $c;
+
+            // from miles
+            $meterConversion = 1609;
+            $geopointDistance = $dist * $meterConversion;
+
+            return $geopointDistance;
+        }
+
+        public function isInRange($lat, $lon) {
+            return $this->distanceGeoPoints($this->posLat, $this->posLon, $lat, $lon) <= 50;
+        }
+
         public function asArray() {
             return [
                 "id" => $this->stationID,

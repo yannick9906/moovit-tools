@@ -10,24 +10,15 @@
                 Editor
             </div>
             <p class="col s12">
+                <input id="fileInput" type="file" style="display:none;" onchange="importStations(event)"/>
+                <button id="btnload" class="btn orange waves-effect waves-light col s3"
+                        onclick="document.getElementById('fileInput').click();" type="button">
+                    <i class="mddi mddi-upload"></i> Import
+                </button><br/><br/>
                 <span class="bolden">Rechtsklick: </span>Neue Haltestelle erstellen<br/>
                 <span class="bolden">Rechtsklick auf Haltestelle: </span>Haltestelle bearbeiten<br/>
                 <span class="bolden">Linksklick auf Haltestelle: </span>Haltestellenoptionen anzeigen<br/>
             </p>
-        </div>
-        <div id="importStationsStart" class="row">
-            <a class="waves-effect waves-light btn orange col s6" onclick="importStationsStart();">Haltestellen importieren</a>
-        </div>
-        <div id="importStations" class="row">
-            <a class="waves-effect waves-light btn orange col s12" onclick="showCoordinates();">Koordinaten anzeigen</a>
-            <pre id="coordinates" class="col s12">
-
-            </pre>
-            <div class="input-field col s12">
-                <textarea id="stops" class="materialize-textarea"></textarea>
-                <label for="stops">Seite hinzufügen</label>
-            </div>
-            <a class="waves-effect waves-light btn orange col s12" onclick="importStations();">Text importieren</a>
         </div>
         <div id="newstationpanel" class="row">
             <div class="col s12 bolden orange-text text-darken-4">
@@ -106,6 +97,14 @@
             <br/>
             <a class="waves-effect waves-light btn right orange" onclick="submitEditLink();">Speichern</a>
             <a class="waves-effect waves-red btn-flat right" onclick="backToLinks();">Abbrechen</a>
+        </div>
+        <div id="importStations" class="row">
+            <div class="progress col s12">
+                <div class="determinate" style="width: 0%" id="stationImportProgress"></div>
+            </div>
+            <p class="col s12" id="stationImportList" style="margin-top: 25px; overflow-y: scroll; max-height: 40vh;">
+
+            </p>
         </div>
     </div>
 </main>
