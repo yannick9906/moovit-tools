@@ -10,7 +10,7 @@
             </i>
         </div>
         <div class="card-panel col s12 row">
-            <div class="input-field col s4">
+            <div class="input-field col s12 m4">
                 <select id="selActProj">
                     <option value="" disabled selected>Projekte</option>
                 </select>

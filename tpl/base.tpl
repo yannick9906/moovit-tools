@@ -20,7 +20,7 @@
     <link rel="manifest" href="../manifest.json" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" content="#4286f4" />
+    <meta name="theme-color" content="#FF9800" />
 </head>
 <body>
 <!--Import jQuery before materialize.js-->
@@ -48,22 +48,24 @@
                         <a href="#!"><span class="white-text name" style="text-shadow: 1px 1px 5px black;">{$args.realname} - {$args.points} Punkte</span></a>
                         <a href="#!"><span class="white-text email" style="text-shadow: 1px 1px 5px black;" id="projectname">{$args.projectname}</span></a>
                     </div></li>
-                <li id="nav-account"><a href="account.php"><i class="material-icons">person</i>Account</a></li>
-                <li class="sub" id="nav-logout"><a href="login.php?err=3">Logout</a></li>
+                <li id="nav-account"><a href="account.php"><i class="mddi mddi-account-settings-variant"></i>Account</a></li>
+                <li id="nav-logout"><a href="login.php?err=3"><i class="mddi mddi-logout-variant"></i>Logout</a></li>
                 <li><div class="divider"></div></li>
                 <li class="subheader"><a class="subheader orange-text text-darken-4 bolden">Projekt</a></li>
-                <li class="sub" id="nav-project"><a href="project.php">Info</a></li>
-                <li class="sub" id="nav-map"><a href="map.php">Karte</a></li>
-                <!--<li class="sub" id="nav-stations"><a href="stations.php">Haltestellen</a></li>-->
-                <!--<li class="sub" id="nav-lnks"><a href="stationLnks.php">Station Links</a></li>-->
-                <li class="sub" id="nav-lines"><a href="linesmap.php">Linien</a></li>
+                <li id="nav-project"><a href="project.php"><i class="mddi mddi-information-outline"></i>Info</a></li>
+                <li id="nav-map"><a href="map.php"><i class="mddi mddi-map"></i>Karte</a></li>
+                <!--<li id="nav-stations"><a href="stations.php"><i class="mddi mddi-map-marker-radius"></i>Haltestellen</a></li>-->
+                <!--<li id="nav-lnks"><a href="stationLnks.php"><i class="mddi mddi-vector-polyline"></i>Station Links</a></li>-->
+                <li id="nav-lines"><a href="linesmap.php"><i class="mddi mddi-vector-line"></i>Linien</a></li>
                 <li><div class="divider"></div></li>
                 <li><a class="subheader orange-text text-darken-4 bolden">Tools</a></li>
-                <li class="sub" id="nav-timetable"><a href="depart.php">Fahrplan</a></li>
+                <li id="nav-timetable"><a href="depart.php"><i class="mddi mddi-timetable"></i>Fahrplan</a></li>
                 <li><div class="divider"></div></li>
-                {if $args.uID == 1}<li><a class="subheader orange-text text-darken-4 bolden">Administration</a></li>
-                <li class="sub" id="nav-database"><a href="../adminer/">Datenbank</a></li>
-                <li><div class="divider"></div></li>{/if}
+                {if $args.uID == 1}
+                    <li><a class="subheader orange-text text-darken-4 bolden">Administration</a></li>
+                    <li id="nav-database"><a href="../adminer/"><i class="mddi mddi-database"></i>Datenbank</a></li>
+                    <li><div class="divider"></div></li>
+                {/if}
             </ul>
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
         </div>
