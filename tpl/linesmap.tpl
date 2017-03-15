@@ -1,7 +1,7 @@
 {include file="base.tpl" args=$header}
-<main style="height: 100%;width: 100%; position: fixed; top: 0; left: 0; padding-left: 300px; padding-top: 60px;">
+<main style="height: 100%;width: 100%; position: fixed; top: 0; left: 0; padding-top: 60px;">
     <div style="height: 100%;width:100%; position: relative;" id="map_canvas"></div>
-    <div class="card-panel" style="position: fixed; right: 20px; top: 80px; width: 35%; z-index: 999;">
+    <div class="card-panel optionspanel">
         <div id="infotextpanel" class="row red-text">
 
         </div>
