@@ -23,15 +23,15 @@
                 Linie erstellen
             </div>
             <div class="col s12" style="margin-top: 25px;">
-                <div class="input-field col s4">
+                <div class="input-field col s12 m4">
                     <input id="new-nameShort" type="text">
                     <label for="new-nameShort">Linienname Kurz</label>
                 </div>
-                <div class="input-field col s8">
+                <div class="input-field col s12 m8">
                     <input id="new-nameLong" type="text">
                     <label for="new-nameLong">Linienname Lang</label>
                 </div>
-                <div class="input-field col s6">
+                <div class="input-field col s12 m4">
                     <select id="new-type">
                         <option value="" disabled selected>Typ</option>
                         <option value="0">Bus</option>
@@ -46,10 +46,10 @@
                     </select>
                     <label>Typ</label>
                 </div>
-            </div>
-            <div class="col s12" style="margin-top: 25px;">
-                <a class="waves-effect waves-light btn right orange" onclick="submitNewLine();">Erstellen</a>
-                <a class="waves-effect waves-red btn-flat right" onclick="backToLines();">Abbrechen</a>
+                <div class="col s12 m7" style="margin-top: 25px;">
+                    <a class="waves-effect waves-light btn right orange" onclick="submitNewLine();">Erstellen</a>
+                    <a class="waves-effect waves-red btn-flat right" onclick="backToLines();">Abbrechen</a>
+                </div>
             </div>
         </div>
         <div id="editorlineseditpanel" class="row">
@@ -57,15 +57,15 @@
                 Linie bearbeiten
             </div>
             <div class="col s12" style="margin-top: 25px;">
-                <div class="input-field col s4">
+                <div class="input-field col s12 m3">
                     <input id="edit-nameShort" type="text">
                     <label for="edit-nameShort">Linienname Kurz</label>
                 </div>
-                <div class="input-field col s8">
+                <div class="input-field col s12 m9">
                     <input id="edit-nameLong" type="text">
                     <label for="edit-nameLong">Linienname Lang</label>
                 </div>
-                <div class="input-field col s6" id="edit-type-div">
+                <div class="input-field col s12 m4" id="edit-type-div">
                     <select id="edit-type">
                         <option value="0">Bus</option>
                         <option value="1">Tram</option>
@@ -79,12 +79,12 @@
                     </select>
                     <label>Typ</label>
                 </div>
+                <div class="col s12 m8" style="margin-top: 25px;">
+                    <a class="waves-effect waves-light btn right orange" onclick="submitEditLine();">Speichern</a>
+                    <a class="waves-effect waves-red btn-flat right" onclick="backToLines();">Abbrechen</a>
+                </div>
             </div>
-            <div class="col s12" style="margin-top: 25px;">
-                <a class="waves-effect waves-light btn right orange" onclick="submitEditLine();">Speichern</a>
-                <a class="waves-effect waves-red btn-flat right" onclick="backToLines();">Abbrechen</a>
-            </div>
-            <div class="col s12" style="margin-top: 25px;">
+            <div class="col s12" style="padding-right: 22px;">
                 <a class="waves-effect waves-light btn right orange" onclick="downloadAllAsKML();">KML</a>
                 <a class="waves-effect waves-light btn right orange" onclick="createNewTrip();">Neuen Trip erstellen</a>
             </div>

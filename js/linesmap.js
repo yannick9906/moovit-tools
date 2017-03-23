@@ -31,7 +31,7 @@ const templateLines = Handlebars.compile(lineListTempl);
 //// Trip List Template
 const tripListTempl = `
 <tr class="showHand">
-    <td onclick="editTrip({{id}})" >{{id}}:<b> {{name}}</b><br/>-> {{destination}}</td><td onclick="editTrip({{id}})" >{{direction}}</td>
+    <td onclick="editTrip({{id}})" ><span class="iconname trip">{{line}}</span><b class="shortname">{{name}}</b><br/><span class="grey-text text-lighten-2">(#{{id}})</span> <i class="mddi mddi-arrow-right"></i> {{destination}}</td><td onclick="editTrip({{id}})" >{{direction}}</td>
     <td>
         <a id="delT{{id}}" onclick="delTrip({{id}})" href="#!" style="padding-left:10px;padding-right:10px;" class="btn-flat right red-text"><i class="mddi mddi-delete"></i></a>
         <a id="denydelT{{id}}" onclick="denyTripdelete({{id}})" href="#!" style="padding-left:10px;padding-right:10px;display:none;" class="btn-flat right red-text"><i class="mddi mddi-close"></i></a>
@@ -64,7 +64,7 @@ let currEdit = -1;
 let currMarkerPos = -1;
 let currEditLink = -1;
 let currID = -1;
-let currentLine = 0;
+let currentLine = "";
 let currentTrip = "";
 let currentTripLatLngs = [];
 let lastMove = new Date().getTime();
@@ -282,7 +282,7 @@ function editLine(id) {
                 json['trips'].forEach(function(e, i, a) {
                     let direction = "inbound";
                     if(e['direction'] == 1) direction = "outbound";
-                    $("#tripList").append(templateTrips({id: e['id'], name: e['name'], direction: direction, destination: e['destination']}));
+                    $("#tripList").append(templateTrips({id: e['id'], name: e['name'], direction: direction, destination: e['destination'], line: currentLine}));
                 });
             } else {
                 $("#tripList").html("<tr><td><i class=\"grey-text\">Keine Trips vorhanden.</i></td></tr>");
