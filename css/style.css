@@ -175,11 +175,36 @@ header, main, footer {
 }
 
 .mddi-bus {
-    background-color: #1976D2;
+    background-color: #4CAF50;
     color: white;
 }
 
 .mddi-train {
     background-color: black;
+    color: white;
+}
+
+.mddi-gondola {
+    background-color: #03A9F4;
+    color: white;
+}
+
+.mddi-subway-variant {
+     background-color: #1976D2;
+     color: white;
+}
+
+.mddi-ferry {
+    background-color: #FF9800;
+    color: white;
+}
+
+.mddi-airplane {
+    background-color: #03A9F4;
+    color: white;
+}
+
+.mddi-infinity {
+    background-color: #9C27B0;
     color: white;
 }

@@ -58,16 +58,16 @@
                 case 4:
                     return "U-Bahn";
                     break;
-                case 6:
+                case 5:
                     return "Fähre";
                     break;
-                case 7:
+                case 6:
                     return "Cablecar";
                     break;
-                case 8:
+                case 7:
                     return "Flugzeug";
                     break;
-                case 9:
+                case 8:
                     return "Hyperloop";
                     break;
                 default:

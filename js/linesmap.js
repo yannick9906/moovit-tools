@@ -201,7 +201,7 @@ function loadLines() {
     $.getJSON("../api/lines/getList.php?sort=nameAsc&page=1",null,function(json) {
         $("#lineList").html("");
         json['lines'].forEach(function(e, i, a) {
-            let types = {'Bus':"bus",'Tram':"tram", 'Zug':'train'};
+            let types = {'Bus':"bus",'Tram':"tram", 'Zug':'train', 'Gondel':'gondola', 'U-Bahn':'subway-variant', 'Fähre':'ferry', 'Flugzeug':'airplane', 'Hyperloop':'infinity', 'Cablecar':'tram'};
             let icon = types[e['type']]
             $("#lineList").append(templateLines({icon: icon, id: e['id'], shortName: e['nameShort'], longName: e['nameLong']}))
         });
