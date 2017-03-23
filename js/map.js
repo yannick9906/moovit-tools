@@ -18,8 +18,8 @@ const template = Handlebars.compile(infoWindowTempl);
 //// Station Link List Template
 const stationLinkListTempl = `
 <span>
-    <span onclick="editLink({{id}})" class="btn orange"><i class="mddi mddi-pencil"></i></span>
-    {{id}}: -> <span class="bolden">{{endStation}}</span>
+    <span onclick="editLink({{id}})" style="padding-left:10px;padding-right:10px;" class="btn-flat"><i class="mddi mddi-pencil"></i></span>
+    <span class="iconname link" style="background-color: {{{color}}};">#{{id}}</span><span class="shortname"><i class="mddi mddi-arrow-right"></i><span class="bolden">{{endStation}}</span></span>
 </span>
 <br/>
     `;
@@ -331,10 +331,11 @@ function listStationLinks(stationID, markerpos) {
             $("#lnkList").html("<i class='grey-text text-lighten-2'>Keine Station Links, welche von dieser Haltestelle ausgehen, gefunden.</i><br/><br/>");
             if(list.length != 0) $("#lnkList").html("<br/>");
             list.forEach(function (e) {
-                $("#lnkStart").html(e['fromStation']['name']+" "+e['fromStation']['code']);
-                $("#lnkList").append(templateLnks({id: e['id'], endStation: e['toStation']['name']+" "+e['toStation']['code']}));
-                //Draw Polyline Preview
                 let color = generateRandomColor();
+                $("#lnkStart").html(e['fromStation']['name']+" "+e['fromStation']['code']);
+                $("#lnkList").append(templateLnks({id: e['id'], endStation: e['toStation']['name']+" "+e['toStation']['code'], color: color}));
+
+                //Draw Polyline Preview
                 const path = JSON.parse(e.path);
                 let latlngs = [];
                 path.forEach(function(e) {
