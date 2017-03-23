@@ -173,6 +173,10 @@
             );
         }
 
+        public function delete() {
+            $this->pdo->query("DELETE FROM moovit_lines WHERE lID = :lid", [":lid" => $this->lineID]);
+        }
+
         /**
          * @return mixed
          */

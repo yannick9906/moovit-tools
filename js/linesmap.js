@@ -17,16 +17,26 @@ const template = Handlebars.compile(infoWindowTempl);
 
 //// Line List Template
 const lineListTempl = `
-<tr onclick="editLine({{id}})" class="showHand">
-    <td><i class="mddi mddi-{{icon}}"></i> <b>{{shortName}}:</b> {{longName}}</td><td><a onclick="removeLine({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
+<tr class="showHand">
+    <td onclick="editLine({{id}})"><i class="mddi mddi-{{icon}} iconname"></i><b class="shortname">{{shortName}}</b></td><td onclick="editLine({{id}})"> {{longName}}</td>
+    <td>
+        <a id="delL{{id}}" onclick="delLine({{id}})" href="#!" style="padding-left:10px;padding-right:10px;" class="btn-flat right red-text"><i class="mddi mddi-delete"></i></a>
+        <a id="denydelL{{id}}" onclick="denyLinedelete({{id}})" href="#!" style="padding-left:10px;padding-right:10px;display:none;" class="btn-flat right red-text"><i class="mddi mddi-close"></i></a>
+        <a id="confdelL{{id}}" onclick="confLinedelete({{id}})" href="#!" style="padding-left:10px;padding-right:10px;display:none;" class="btn-flat right green-text"><i class="mddi mddi-check"></i></a>
+    </td>
 </tr>
     `;
 const templateLines = Handlebars.compile(lineListTempl);
 
 //// Trip List Template
 const tripListTempl = `
-<tr onclick="editTrip({{id}})" class="showHand">
-    <td>{{id}}:<b> {{name}}</b><br/>-> {{destination}}</td><td>{{direction}}</td><td><a onclick="removeTrip({{id}})" class="btn btn-flat red-text right"><i class="mddi mddi-delete"></i></a></td>
+<tr class="showHand">
+    <td onclick="editTrip({{id}})" >{{id}}:<b> {{name}}</b><br/>-> {{destination}}</td><td onclick="editTrip({{id}})" >{{direction}}</td>
+    <td>
+        <a id="delT{{id}}" onclick="delTrip({{id}})" href="#!" style="padding-left:10px;padding-right:10px;" class="btn-flat right red-text"><i class="mddi mddi-delete"></i></a>
+        <a id="denydelT{{id}}" onclick="denyTripdelete({{id}})" href="#!" style="padding-left:10px;padding-right:10px;display:none;" class="btn-flat right red-text"><i class="mddi mddi-close"></i></a>
+        <a id="confdelT{{id}}" onclick="confTripdelete({{id}})" href="#!" style="padding-left:10px;padding-right:10px;display:none;" class="btn-flat right green-text"><i class="mddi mddi-check"></i></a>
+    </td>
 </tr>
     `;
 const templateTrips = Handlebars.compile(tripListTempl);
@@ -191,7 +201,7 @@ function loadLines() {
     $.getJSON("../api/lines/getList.php?sort=nameAsc&page=1",null,function(json) {
         $("#lineList").html("");
         json['lines'].forEach(function(e, i, a) {
-            let types = {'Bus':"bus",'Tram':"tram", 'Train':'train'};
+            let types = {'Bus':"bus",'Tram':"tram", 'Zug':'train'};
             let icon = types[e['type']]
             $("#lineList").append(templateLines({icon: icon, id: e['id'], shortName: e['nameShort'], longName: e['nameLong']}))
         });
@@ -301,6 +311,36 @@ function submitEditLine() {
     });
 }
 
+function delLine(id) {
+    $("#delL"+id).hide();
+    $("#confdelL"+id).show();
+    $("#denydelL"+id).show();
+}
+
+function confLinedelete(id) {
+    $("#delL"+id).show();
+    $("#confdelL"+id).hide();
+    $("#denydelL"+id).hide();
+    let data = {
+        id: id
+    };
+    $.getJSON("../api/lines/remove.php",data,function(json) {
+        if (json.success == "1") {
+            Materialize.toast("Linie gelöscht", 2000, "green");
+            backToLines();
+            $("#editortripseditpanel").hide();
+        } else {
+            Materialize.toast("Fehler", 2000, "red");
+        }
+    });
+}
+
+function denyLinedelete(id) {
+    $("#delL"+id).show();
+    $("#confdelL"+id).hide();
+    $("#denydelL"+id).hide();
+}
+
 ////////////////////////////////////////////////////////////////////
 // Trips  //////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -337,8 +377,20 @@ function submitNewTrip() {
     });
 }
 
-function removeTrip(id) {
-    $.getJSON("../api/trips/remove.php?id="+id,null,function(json) {
+function delTrip(id) {
+    $("#delT"+id).hide();
+    $("#confdelT"+id).show();
+    $("#denydelT"+id).show();
+}
+
+function confTripdelete(id) {
+    $("#delT"+id).show();
+    $("#confdelT"+id).hide();
+    $("#denydelT"+id).hide();
+    let data = {
+        id: id
+    };
+    $.getJSON("../api/trips/remove.php",data,function(json) {
         if (json.success == "1") {
             Materialize.toast("Trip gelöscht", 2000, "green");
             editLine(currEdit);
@@ -347,6 +399,12 @@ function removeTrip(id) {
             Materialize.toast("Fehler", 2000, "red");
         }
     });
+}
+
+function denyTripdelete(id) {
+    $("#delT"+id).show();
+    $("#confdelT"+id).hide();
+    $("#denydelT"+id).hide();
 }
 
 function startStationLinks(stationID, stationName) {

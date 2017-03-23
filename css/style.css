@@ -155,3 +155,31 @@ header, main, footer {
 .btn {
     margin-right: 5px;
 }
+
+.iconname {
+    padding: 4px;
+    border-radius: 2px 0px 0px 2px;
+    margin-right: 0;
+}
+
+.shortname {
+    background-color: #E0E0E0;
+    padding: 4px;
+    border-radius: 0px 2px 2px 0px;
+    margin-left: 0;
+}
+
+.mddi-tram {
+    background-color: #F44336;
+    color: white;
+}
+
+.mddi-bus {
+    background-color: #1976D2;
+    color: white;
+}
+
+.mddi-train {
+    background-color: black;
+    color: white;
+}

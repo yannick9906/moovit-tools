@@ -1,6 +1,6 @@
 {include file="base.tpl" args=$header}
-<main style="height: 100%;width: 100%; position: fixed; top: 0; left: 0; padding: 0; padding-top: 60px;">
-    <div style="height: 100%;width:100%; position: relative;" id="map_canvas"></div>
+<main style="height: 100%;width: 100%; position: fixed; top: 0; left: 0; padding: 60px 0 0; right: 0;">
+    <div style="height: 100%;width:100%; position: relative; right: 0;" id="map_canvas"></div>
     <div class="card-panel optionspanel">
         <div id="infotextpanel" class="row red-text">
 
