@@ -43,9 +43,9 @@ const templateTrips = Handlebars.compile(tripListTempl);
 
 //// Trip Links Template
 const tripLinksTempl = `
-<tr>
-    <td><b>{{id}}:</b> {{destination}}</td>
-</tr>
+<tr><td>
+    <span class="iconname link" style="background-color: {{{color}}};">#{{id}}</span><span class="shortname"><i class="mddi mddi-arrow-right"></i><span class="bolden">{{destination}}</span><span>(#{{EndId}})</span></span>
+</td></tr>
     `;
 const templateLinks = Handlebars.compile(tripLinksTempl);
 
@@ -410,7 +410,7 @@ function denyTripdelete(id) {
 function startStationLinks(stationID, stationName) {
     if(currEditLink != -1 && pathLatLngs.length == 0) {
         loadLinksFor(stationID);
-        $("#linkList").html(templateLinks({id:"Start",destination: stationName}))
+        $("#linkList").html(templateLinks({id:"Start",destination: stationName,EndId: stationID, color: "#9C27B0"}))
     }
 }
 
@@ -467,7 +467,7 @@ function loadLinksFor(stationID) {
             polylines.push(line);
             polylines.push(decorator);
 
-            $("#nextLinks").append("<a onclick='addLink("+e['id']+",\""+JSON.stringify(latlngs)+"\")' class='btn orange'>"+e['toStation']['name']+" "+e['toStation']['code']+"</a>");
+            $("#nextLinks").append("<a onclick='addLink("+e['id']+",\""+JSON.stringify(latlngs)+"\")' class='btn-flat mddi mddi-arrow-right'></a><span class='iconname link' style='background-color: "+color+";'>#"+e["id"]+"</span><span class='shortname'><i class='mddi mddi-arrow-right'></i><span class='bolden'>"+e['toStation']['name']+" "+e['toStation']['code']+"</span></span><br/>");
         });
         $("#nextLinks").append("<br/><br/><a onclick='removeLastLink()' class='btn btn-flat'>Zurück</a>");
 
@@ -481,7 +481,9 @@ function addLink(lnkID, path) {
     pathLatLngs.push(JSON.parse(path));
     $.getJSON("../api/stationlinks/details.php?id="+lnkID,null,function(json) {
         let endStationID = json["toStation"]["id"];
-        $("#linkList").append(templateLinks({id:endStationID, destination: "-> "+json["toStation"]["name"]+" "+json["toStation"]["code"]}))
+        let html = templateLinks({color: "#9C27B0",id:json["id"],EndId:endStationID, destination: json["toStation"]["name"]+" "+json["toStation"]["code"]});
+        console.log(html);
+        $("#linkList").append(html);
         loadLinksFor(endStationID);
     });
 }
