@@ -13,6 +13,9 @@ let direction = "in";
 let day = "MoFr";
 let type = "mvg";
 let history = [];
+let currentInterval;
+let upperLimit = 0;
+let lowerLimit = 999;
 
 $(document).ready(function() {
     $.support.selectstart = "onselectstart" in document.createElement("div");
@@ -390,26 +393,47 @@ function printTripTypes() {
     for(let i = 0; i < trips.length; i++) {
         let startStation = timetable[trips[i][0]][0];
         let endStation = timetable[trips[i][trips[i].length - 1]][0];
-        $("#types").append("<button id='btnBack' class='btn orange waves-effect waves-light col s3' onclick='showIntervals("+i+")' type='button'>Intervalle</button>"+startStation+" -> "+endStation+"<br/>")
+        $("#types").append("<p class='col s12'><input style='margin-top: 7px' type='checkbox' id='chk"+i+"' /><label style='margin-top: 7px;' for='chk"+i+"'>"+startStation+" -> "+endStation+"&nbsp;</label><button id='' class='btn orange waves-effect waves-light left' onclick='showIntervals("+i+")' type='button'>Intervalle</button></p>")
     }
 }
 
-function biggestArraySize() {
+function biggestArraySize(t) {
+    let croppedTimetable;
+    if(t) croppedTimetable = t;
+    else croppedTimetable = timetable;
     let size = 0;
-    for(let i = 0; i < timetable.length; i++) {
-        if(timetable[i].length > size) {
-            size = timetable[i].length;
+    for(let i = 0; i < croppedTimetable.length; i++) {
+        if(croppedTimetable[i].length > size) {
+            size = croppedTimetable[i].length;
         }
     }
     return size;
 }
 
 function showIntervals(interval) {
+    fillStartAndEndStationSelect();
+    currentInterval = interval;
+    let croppedTimetable = timetable.slice(upperLimit, lowerLimit+1);
+
     let tripTypes = [];
     for(let i = 1; i < biggestArraySize(); i++) {
         let type = [];
-        for(let j = 0; j < timetable.length; j++) {
-            if(timetable[j][i] != "|") {
+        for(let j = 0; j < croppedTimetable.length; j++) {
+            if(croppedTimetable[j][i] != "|") {
+                type.push(j);
+            }
+        }
+        tripTypes.push(type);
+    }
+    //console.log(tripTypes);
+
+    let trips = deleteDuplicates(tripTypes);
+
+    console.log(croppedTimetable);
+    for(let i = 1; i < biggestArraySize(croppedTimetable); i++) {
+        let type = [];
+        for(let j = 0; j < croppedTimetable.length; j++) {
+            if(croppedTimetable[j][i] != "|") {
                 type.push(j);
             }
         }
@@ -421,9 +445,9 @@ function showIntervals(interval) {
     for(let i = 0; i < tripTypes.length; i++) {
         if(JSON.stringify(tripTypes[i]) == intervalToCheck) {
             let thisTrip = [];
-            for(let j = 0; j < timetable.length; j++) {
-                if(timetable[j][i+1] != "|") {
-                    thisTrip.push(timetable[j][i+1]);
+            for(let j = 0; j < croppedTimetable.length; j++) {
+                if(croppedTimetable[j][i+1] != "|") {
+                    thisTrip.push(croppedTimetable[j][i+1]);
                 }
             }
             tripTimes.push(thisTrip);
@@ -431,8 +455,9 @@ function showIntervals(interval) {
     }
 
     let intervals = [];
+    console.log(tripTimes);
     tripTimes.forEach(function(trip, i) {
-        intervals[i] = createIntervalString(trip);
+        if(trip[0] != undefined) intervals[i] = createIntervalString(trip);
     });
 
     let uniqueIntervals = intervals.filter(function(item, pos) {
@@ -443,8 +468,8 @@ function showIntervals(interval) {
     uniqueIntervals.forEach(function(elem, i) {
         output += "["+i+"]: " + elem + "\n";
     });
-    let startStation = timetable[trips[interval][0]][0];
-    let endStation = timetable[trips[interval][trips[interval].length - 1]][0];
+    let startStation = croppedTimetable[trips[interval][0]][0];
+    let endStation = croppedTimetable[trips[interval][trips[interval].length - 1]][0];
     updateInfo();
     output = "Intervalle fuer: "+startStation+" -> "+endStation+"\n\n"+output;
     output = "Linie "+line+" "+direction+" "+day+" \n\n"+output;
@@ -505,6 +530,38 @@ function createIntervalString(timeArray) {
     return string;
 }
 
+function fillStartAndEndStationSelect() {
+    $("#startstation").html("");
+    $("#endstation").html("");
+    timetable.forEach((e, i) => {
+        if(upperLimit == i) $("#startstation").append("<option selected value='"+i+"'>"+e[0]+"</option>");
+        else  $("#startstation").append("<option value='"+i+"'>"+e[0]+"</option>");
+        if((lowerLimit == 999 && i == timetable.length-1) || (lowerLimit != 999 && i == lowerLimit)) $("#endstation").append("<option selected value='"+i+"'>"+e[0]+"</option>");
+        else $("#endstation").append("<option value='"+i+"'>"+e[0]+"</option>");
+    });
+    $("#startstation").material_select();
+    $("#endstation").material_select();
+
+    $("#startstation").change(() => {
+        setUpperLimit($("#startstation").val())
+    });
+    $("#endstation").change(() => {
+        setLowerLimit($("#endstation").val())
+    });
+}
+
+function setUpperLimit(i) {
+    console.log("Triggerd: u" + i);
+    upperLimit = parseInt(i);
+    showIntervals(currentInterval);
+}
+
+function setLowerLimit(i) {
+    console.log("Triggerd: l" + i);
+    lowerLimit = parseInt(i);
+    showIntervals(currentInterval);
+}
+
 function fillUpRow(rowToFill) {
     let until = biggestArraySize();
     let row = timetable[rowToFill];
@@ -516,9 +573,19 @@ function fillUpRow(rowToFill) {
 
 function fillUpAll() {
     takeSnapshot();
-    for(let i = 0; i < timetable.length;i++) {
+    let progressbar = $("#progress");
+    progressbar.css("width",0)
+    let i = 0;
+    let process = () => {
+        console.log((i / timetable.length) * 100 + "%");
+        progressbar.css("width", (i / timetable.length)*100 + "%");
         fillUpRow(i);
+        if(i < timetable.length) {
+            i++;
+            setTimeout(process, 5)
+        }
     }
+    process();
 }
 
 function save() {

@@ -48,20 +48,27 @@
                     <i class="mddi mddi-minus-box"></i> close
                 </button>
             </div>
+            <div class="progress col s12 orange lighten-5">
+                <div class="determinate orange" id="progress" style="width: 0%"></div>
+            </div>
         </div>
         <div class="card-panel col s12 row" id="addPage">
+            <button id="btnAddPage" class="btn orange waves-effect waves-light col s2 right" onclick="addPage()" style="margin-top: 10px;"
+                    type="button">
+                <i class="mddi mddi-plus"></i> page
+            </button>
             <div class="input-field col s12">
                 <textarea id="addPageInput" class="materialize-textarea"></textarea>
                 <label for="addPageInput">Text Input</label>
             </div>
-            <button id="btnAddPage" class="btn orange waves-effect waves-light col s2 right" onclick="addPage()" style="margin-bottom: 10px;"
-                    type="button">
-                <i class="mddi mddi-plus"></i> page
-            </button>
         </div>
     </div>
     <div class="card-panel col s12" style="overflow: scroll; max-height: 70vh; margin-top: -10px;">
         <div class="" id="times">
+            <button id="btnFillAll" class="btn orange waves-effect waves-light col s3" onclick="fillUpAll()"
+                    type="button">
+                <i class="mddi mddi-basket-fill"></i> Alles füllen
+            </button>
             <table class="centered striped">
                 <thead>
                 </thead>
@@ -90,10 +97,6 @@
                     2/1
                 </button>
             </div>
-            <button id="btnFillAll" class="btn orange waves-effect waves-light col s3" onclick="fillUpAll()"
-                    type="button">
-                <i class="mddi mddi-basket-fill"></i> Alles füllen
-            </button>
         </div>
         <div id="tripTypes">
             <p id="types">
@@ -104,17 +107,29 @@
                 <i class="mddi mddi-arrow-left"></i> Fahrplan
             </button>
         </div>
-        <div id="intervalTypes">
-                <pre id="intervals">
+        <div id="intervalTypes" class="row">
+            <pre id="intervals" class="col s12">
 
-                </pre>
-            <pre id="intervalTimes">
+            </pre>
+            <pre id="intervalTimes" class="col s12">
 
-                </pre>
+            </pre>
             <button id="btnBackTrip" class="btn orange waves-effect waves-light col s3" onclick="backToTrips()"
                     type="button">
                 <i class="mddi mddi-arrow-left"></i> Triptypes
             </button>
+            <div class="input-field col s3">
+                <select id="startstation">
+                    <option value="" disabled selected>Starthalt</option>
+                </select>
+                <label>Erster Halt</label>
+            </div>
+            <div class="input-field col s3">
+                <select id="endstation">
+                    <option value="" disabled selected>Endhalt</option>
+                </select>
+                <label>Letzter Halt</label>
+            </div>
         </div>
     </div>
 </main>
